@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1029045777888",
+    "project_id": "machine-care",
+    "storage_bucket": "machine-care.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029045777888:android:15e0d0389b3f03f40ce785",
+        "android_client_info": {
+          "package_name": "com.example.machine_care"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029045777888-ol5t77lh2q41924ftkpb6mtd3osnmmip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2ZIWdsk8jpbThd0PVEmvEgM6tMP1Bses"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029045777888-ol5t77lh2q41924ftkpb6mtd3osnmmip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
