@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:machine_care/device.dart';
 import 'package:machine_care/routers/app_routes.dart';
 import 'package:machine_care/translation/app_translation.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -22,6 +23,8 @@ class MyApp extends StatefulWidget {
     runZonedGuarded(() async {
       WidgetsFlutterBinding.ensureInitialized();
       await AppPref.initListener();
+      final id = await DeviceService.getDeviceId();
+      print("iddd $id");
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       await OneSignal.shared.setAppId(AppValues.oneSignalID);
