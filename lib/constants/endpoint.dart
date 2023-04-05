@@ -7,4 +7,6 @@ class EndPoint {
   static const int errorValidate = 422;
   static const int errorServer = 500;
   static const int errorDisconnect = -1;
+  static const String baseUrl = 'http://localhost:3000';
+
 }

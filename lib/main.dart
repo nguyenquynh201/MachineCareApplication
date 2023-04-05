@@ -60,13 +60,15 @@ class _MyAppState extends State<MyApp> {
                 switch (settings.name) {
                   case Routes.navigation:
                     return MaterialPageRoute(builder: (_) => NavigationScreen());
+                  case Routes.login :
+                    return MaterialPageRoute(builder: (_) => LoginScreen());
                 }
                 return null;
               },
-              initialRoute: Routes.navigation,
+              initialRoute: Routes.login,
               builder: appBuilder,
               navigatorObservers: [defaultLifecycleObserver],
-              initialBinding: NavigationBinding(),
+              initialBinding: LoginBinding(),
               // theme: appThemeData,
               defaultTransition: Transition.fadeIn,
               getPages: AppPages.pages,

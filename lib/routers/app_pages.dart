@@ -7,5 +7,10 @@ class AppPages extends Routes {
     GetPage(name: Routes.navigation, page: () => NavigationScreen(), bindings: [
       NavigationBinding(),
     ]),
+    GetPage(
+      name: Routes.login,
+      binding: LoginBinding(),
+      page: () => LoginScreen(),
+    ),
   ];
 }

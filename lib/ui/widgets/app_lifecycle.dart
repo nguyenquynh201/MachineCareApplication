@@ -25,10 +25,6 @@ class _AppLifecycleWatcherState extends State<AppLifecycleWatcher> with WidgetsB
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
-      // if (Get.isRegistered<ChatController>()) {
-      //   FlutterAppBadger.updateBadgeCount(Get.find<ChatController>().getNumBadge());
-      // }
-
     }
     if (state == AppLifecycleState.resumed) {
 
