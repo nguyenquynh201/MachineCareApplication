@@ -10,6 +10,16 @@ class AppUtils {
   static logMessage(String message) {
     log(message);
   }
+  static String getKeyFromUrl(String url) {
+    String key = url
+        .replaceAll("http://", "1")
+        .replaceAll("https://", "2")
+        .replaceAll("/", "3")
+        .replaceAll(":", "4")
+        .replaceAll(".", "5")
+        .replaceAll("?", "6");
+    return key;
+  }
   static showToast(String message,
       {Duration duration = const Duration(seconds: 2), BuildContext? context}) {
     if (duration <= Duration.zero) {

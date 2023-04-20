@@ -1,4 +1,9 @@
 import 'package:machine_care/enum/validate.dart';
+import 'package:machine_care/resources/model/model.dart';
+import 'package:machine_care/resources/network_state.dart';
+import 'package:machine_care/routers/app_routes.dart';
+import 'package:machine_care/utils/app_pref.dart';
+import 'package:machine_care/utils/app_utils.dart';
 import 'package:machine_care/utils/string_utils.dart';
 
 import '../ui.dart';
@@ -9,7 +14,7 @@ class LoginController extends BaseController {
     super.onInit();
   }
 
-  Rx<int> phoneNumber = 0.obs;
+  Rx<String> phoneNumber = "".obs;
   Rx<String> password = "".obs;
   Rx<bool> obscureText = false.obs;
   Rx<bool> onErrorPhone = false.obs;
@@ -19,7 +24,7 @@ class LoginController extends BaseController {
   ValidatePhoneState get validatePhoneState => _validatePhoneState;
 
   void onChangedPhoneNumber(String value) {
-    phoneNumber.value = int.parse(value);
+    phoneNumber.value = value;
     if (value.trim().isEmpty) {
       _validatePhoneState = ValidatePhoneState.none;
       onErrorPhone.value = false;
@@ -58,13 +63,34 @@ class LoginController extends BaseController {
   }
 
   void onLogin() async {
-
+    setLoading(true);
+    try {
+      NetworkState state =
+          await appRepository.login(phoneNumber.value.toString(), password.value.trim());
+      if (state.isSuccess && state.data != null) {
+        AppPref.token = state.data;
+        NetworkState userProfile = await appRepository.getMyProfile();
+        if (userProfile.isSuccess && userProfile.data != null) {
+          AppPref.user = userProfile.data;
+          print("hihi ${(userProfile.data as UserEntity).resetPassword!}");
+          if (!(userProfile.data as UserEntity).resetPassword!) {
+            Get.toNamed(Routes.resetPassword, arguments: userProfile.data);
+          } else {
+            Get.toNamed(Routes.information, arguments: userProfile.data);
+          }
+          AppUtils.showToast('login_success'.tr);
+        }
+      }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      AppUtils.showToast(e.toString());
+    }
   }
+
   Rx<bool> get enable {
-    print("nè nè ${_validatePhoneState == ValidatePhoneState.none &&
-        _validatePasswordState == ValidatePasswordState.none &&
-        !StringUtils.isEmpty(phoneNumber.value.toString()) &&
-        !StringUtils.isEmpty(password.value)}");
+    print(
+        "nè nè ${_validatePhoneState == ValidatePhoneState.none && _validatePasswordState == ValidatePasswordState.none && !StringUtils.isEmpty(phoneNumber.value.toString()) && !StringUtils.isEmpty(password.value)}");
     return (_validatePhoneState == ValidatePhoneState.none &&
             _validatePasswordState == ValidatePasswordState.none &&
             !StringUtils.isEmpty(phoneNumber.value.toString()) &&

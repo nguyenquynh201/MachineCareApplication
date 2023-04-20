@@ -4,7 +4,8 @@ class NetworkState<T> {
   int? status;
   String? message;
   T? response;
-  NetworkState({this.message, this.response, this.status});
+  int? total;
+  NetworkState({this.message, this.response, this.status , this.total});
 
   NetworkState.withError(error) {
     String? message;
@@ -20,10 +21,12 @@ class NetworkState<T> {
       this.message = message ?? "";
       status = code;
       this.response = null;
+      total = 0;
     } else {
       status = 500;
       message = "";
       response = null;
+      total = 0;
 
     }
   }

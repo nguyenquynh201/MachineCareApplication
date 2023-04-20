@@ -69,6 +69,10 @@ dependencies:
   path_provider: ^2.0.5
   overlay_support: ^2.0.1
   flutter_svg: ^1.0.3
+  flutter_cache_manager: ^3.3.0
+  html_unescape: ^2.0.0
+  dotted_border: ^2.0.0
+  flutter_typeahead: ^4.3.7
 dev_dependencies:
   flutter_test:
     sdk: flutter

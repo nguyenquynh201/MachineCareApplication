@@ -1,4 +1,5 @@
 import 'package:machine_care/enum/validate.dart';
+import 'package:machine_care/ui/ui.dart';
 
 class StringUtils {
   static bool isEmpty(String? s) {
@@ -20,6 +21,15 @@ class StringUtils {
         return "";
     }
   }
+  static String toErrorTimeString(CompareTimeState state) {
+    switch (state) {
+      case CompareTimeState.invalid:
+        return "Thời gian không hợp lệ!";
+      case CompareTimeState.none:
+      default:
+        return "";
+    }
+  }
 
   static String toInvalidPasswordString(ValidatePasswordState state) {
     switch (state) {
@@ -30,6 +40,17 @@ class StringUtils {
       case ValidatePasswordState.none:
       default:
       return "";
+    }
+  }
+  static String targetMachineType(
+      { TargetMachine? targetMachine}) {
+    switch (targetMachine) {
+      case TargetMachine.frequent:
+        return 'frequent'.tr;
+      case TargetMachine.maintenance:
+        return 'maintenance'.tr;
+      default:
+        return 'frequent'.tr;
     }
   }
 }

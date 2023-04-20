@@ -45,6 +45,7 @@ class LoginScreen extends BaseScreen<LoginController> {
                               path: AppImages.iconVietNam,
                               height: 18,
                               width: 18,
+                              isColor: true,
                             )
                           ],
                         ),
@@ -116,7 +117,9 @@ class LoginScreen extends BaseScreen<LoginController> {
                                 title: 'continue'.tr,
                                 backgroundColor: AppColor.colorButton,
                                 enabled: _.enable.value,
-                                onPressed: () {},
+                                onPressed: () {
+                                  _.onLogin();
+                                },
                                 typeButton: TypeButton.custom,
                               ),
                               const SizedBox(
@@ -198,6 +201,7 @@ class WidgetSocial extends StatelessWidget {
             height: height,
             width: width,
             fit: BoxFit.contain,
+            isColor: true,
           ),
         ),
       ),

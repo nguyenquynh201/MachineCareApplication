@@ -21,6 +21,7 @@ class WidgetInput extends StatelessWidget {
       this.onChanged,
       this.onSubmitted,
       this.typeInput = TypeInput.none,
+      this.iconRight,
       this.isReasonable = false})
       : super(key: key);
   final String? hint;
@@ -35,6 +36,8 @@ class WidgetInput extends StatelessWidget {
   final OnSubmit? onSubmitted;
   final TypeInput typeInput;
   final bool isReasonable;
+  final Widget? iconRight;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,6 +63,8 @@ class WidgetInput extends StatelessWidget {
                       path: AppImages.iconVietNam,
                       height: 18,
                       width: 18,
+                      fit: BoxFit.contain,
+                      isColor: true,
                     ),
                     const SizedBox(
                       width: 14,
@@ -91,9 +96,12 @@ class WidgetInput extends StatelessWidget {
                       controller: controller,
                       onChanged: onChanged,
                       onSubmitted: onSubmitted,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        height: 1.25,
+                      style:  TextStyle(
+                          fontSize: 14,
+                          height: 1.25,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: Fonts.Quicksand.name,
+                          color: AppColor.colorTitleHome
                       ),
                       textAlignVertical: TextAlignVertical.center,
                       obscureText: obscureText,
@@ -102,13 +110,21 @@ class WidgetInput extends StatelessWidget {
                         border: InputBorder.none,
                         hintText: hint,
                         hintStyle:
-                            const TextStyle(fontSize: 14, height: 1.25, color: AppColor.primary),
+                             TextStyle(fontSize: 14, height: 1.25, color: AppColor.primary , fontFamily: Fonts.Quicksand.name , fontWeight: FontWeight.w600),
                       ),
                       keyboardType: keyboardType,
                     ),
                   ),
                 ),
               ),
+              if (iconRight != null)
+                Material(
+                    color: AppColor.white,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: onRightIconPressed,
+                        child: iconRight)),
               if (keyboardType == TextInputType.visiblePassword)
                 Material(
                   color: AppColor.white,
@@ -119,28 +135,28 @@ class WidgetInput extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       child: WidgetSvg(
-                          path: (obscureText) ? AppImages.iconEyeOff : AppImages.iconEyeOn,
-                          height: 20,
-                          width: 20,
-                          ),
-                    ),
-                  ),
-                ),
-              if (isReasonable == true)
-                Material(
-                  color: AppColor.primary,
-                  borderRadius: BorderRadius.circular(20),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: onRightIconPressed,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: const WidgetSvg(
-                        path: AppImages.iconVietNam,
+                        path: (obscureText) ? AppImages.iconEyeOff : AppImages.iconEyeOn,
+                        height: 20,
+                        width: 20,
                       ),
                     ),
                   ),
                 ),
+              // if (isReasonable == true)
+              //   Material(
+              //     color: AppColor.primary,
+              //     borderRadius: BorderRadius.circular(20),
+              //     child: InkWell(
+              //       borderRadius: BorderRadius.circular(20),
+              //       onTap: onRightIconPressed,
+              //       child: Container(
+              //         padding: const EdgeInsets.all(10),
+              //         child: const WidgetSvg(
+              //           path: AppImages.iconVietNam,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
             ],
           ),
         ),

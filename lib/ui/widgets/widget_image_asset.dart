@@ -8,7 +8,8 @@ class WidgetImageAsset extends StatelessWidget {
   final int? cacheWidth;
   final int? cacheHeight;
   final Color? color;
-
+  final BorderRadius? borderRadius;
+  final double? radius;
   const WidgetImageAsset(
       {Key? key,
         required this.url,
@@ -17,7 +18,7 @@ class WidgetImageAsset extends StatelessWidget {
         this.fit,
         this.color,
         this.cacheWidth,
-        this.cacheHeight})
+        this.cacheHeight, this.borderRadius, this.radius})
       : super(key: key);
 
   @override
@@ -32,14 +33,17 @@ class WidgetImageAsset extends StatelessWidget {
       cacheWidthTemp =
       width != null ? (width! * MediaQuery.of(context).devicePixelRatio).round() : null;
     }
-    return Image.asset(
-      url,
-      width: width,
-      height: height,
-      fit: fit ?? BoxFit.contain,
-      color: color,
-      cacheWidth: cacheWidthTemp,
-      cacheHeight: cacheHeightTemp,
+    return ClipRRect(
+      borderRadius: borderRadius ?? BorderRadius.circular(radius ?? 0),
+      child: Image.asset(
+        url,
+        width: width,
+        height: height,
+        fit: fit ?? BoxFit.contain,
+        color: color,
+        cacheWidth: cacheWidthTemp,
+        cacheHeight: cacheHeightTemp,
+      ),
     );
   }
 }

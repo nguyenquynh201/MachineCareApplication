@@ -1,10 +1,10 @@
 class AuthEntity {
-  final String accessToken;
-  final String refreshToken;
+   String? accessToken;
+   String? refreshToken;
 
   AuthEntity({
-    required this.accessToken,
-    required this.refreshToken,
+     this.accessToken,
+     this.refreshToken,
   });
 
   factory AuthEntity.fromJson(Map<String, dynamic> json) {
@@ -12,5 +12,11 @@ class AuthEntity {
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'accessToken' : accessToken,
+      'refreshToken' : refreshToken,
+    };
   }
 }

@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'utils/utils.dart';
 import 'package:lifecycle/lifecycle.dart';
+
 void main() async => MyApp.appRunner();
 
 class MyApp extends StatefulWidget {
@@ -22,9 +23,8 @@ class MyApp extends StatefulWidget {
   static Future<void> appRunner() async {
     runZonedGuarded(() async {
       WidgetsFlutterBinding.ensureInitialized();
+      await setupLocator();
       await AppPref.initListener();
-      final id = await DeviceService.getDeviceId();
-      print("iddd $id");
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       await OneSignal.shared.setAppId(AppValues.oneSignalID);
@@ -47,6 +47,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DataFilter.banners.value = AppPref.banner.map((e) => e).toList();
+
+  }
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
         designSize: ScreenUtil.defaultSize,
@@ -60,15 +67,18 @@ class _MyAppState extends State<MyApp> {
                 switch (settings.name) {
                   case Routes.navigation:
                     return MaterialPageRoute(builder: (_) => NavigationScreen());
-                  case Routes.login :
+                  case Routes.login:
                     return MaterialPageRoute(builder: (_) => LoginScreen());
+                  case Routes.mainNavigation:
+                    return MaterialPageRoute(builder: (_) => MainNavigationScreen());
                 }
                 return null;
               },
-              initialRoute: Routes.login,
+              initialRoute: Routes.navigation,
               builder: appBuilder,
+              navigatorKey: AppPages.navigationKey,
               navigatorObservers: [defaultLifecycleObserver],
-              initialBinding: LoginBinding(),
+              // initialBinding: NavigationBinding(),
               // theme: appThemeData,
               defaultTransition: Transition.fadeIn,
               getPages: AppPages.pages,
@@ -78,9 +88,11 @@ class _MyAppState extends State<MyApp> {
           );
         });
   }
+
   void localLogWriter(String text, {bool isError = false}) {
     AppLogger.getLogger().shout(text);
   }
+
   Widget appBuilder(BuildContext context, Widget? child) {
     AppValues.scaleSize(context);
     ScreenUtil.init(context);
@@ -93,6 +105,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
 class MyBehavior extends ScrollBehavior {
   @override
   Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
