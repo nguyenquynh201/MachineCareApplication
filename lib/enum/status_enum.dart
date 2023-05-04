@@ -1,0 +1,1 @@
+enum Status { Cancel , Waiting , Coming , Done , Received  }
