@@ -48,6 +48,7 @@ class AppImages {
   static const String iconEdit = '${pathSvg}ic_edit.svg';
   static const String iconAddLocation = '${pathSvg}ic_add_location.svg';
   static const String iconLocation = '${pathSvg}ic_location_on.svg';
+  static const String iconChevronLeft = '${pathSvg}ic-chevron-left.svg';
   static const String iconMale = '${pathSvg}ic_male.svg'; /// nam
   static const String iconFemale = '${pathSvg}ic_female.svg'; /// nữ
 

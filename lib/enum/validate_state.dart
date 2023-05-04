@@ -4,6 +4,7 @@ enum ValidatePasswordState {
   none,
   invalid,
   notCorrect,
+
 }
 
 enum ValidateOTPState {

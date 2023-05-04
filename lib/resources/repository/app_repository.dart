@@ -23,6 +23,12 @@ class AppRepository {
     return await authRepository.getMyProfile();
   }
 
+  Future<NetworkState<dynamic>> resetPassword(
+      {required String id, required String currentPassword, required String newPassword}) async {
+    return await authRepository.resetPassword(
+        id: id, currentPassword: currentPassword, newPassword: newPassword);
+  }
+
   Future<NetworkState<List<BannerEntity>>> getBanner() async {
     return await authRepository.getBanner();
   }
@@ -60,14 +66,18 @@ class AppRepository {
 
   Future<NetworkState<UserAddress>> addAddress({required UserAddress entity}) async {
     return await maintenanceScheduleRepository.createAddress(entity: entity);
-  } Future<NetworkState<List<UserAddress>>> getAddress() async {
+  }
+
+  Future<NetworkState<List<UserAddress>>> getAddress() async {
     return await maintenanceScheduleRepository.getAddress();
+  }
+  Future<NetworkState<dynamic>> updateToken({required String token }) async {
+    return await authRepository.updateToken(token: token);
   }
 
   Future<bool> isUserLoggedIn() async {
     try {
       if (AppPref.token.accessToken == null || AppPref.token.accessToken!.isEmpty) return false;
-
       /// get new token
       final state = await authRepository.refreshToken(
         accessToken: AppPref.token.accessToken!,

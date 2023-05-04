@@ -9,16 +9,20 @@ class WidgetHeader extends StatelessWidget {
   const WidgetHeader(
       {Key? key,
       this.actions,
+      this.address,
       required this.title,
       this.centerTitle = false,
       this.widgetTitle,
       this.leading,
       this.isBackground = false,
       this.isWebView = false,
-      this.textStyle, this.color, this.colorIcon})
+      this.textStyle,
+      this.color,
+      this.colorIcon})
       : super(key: key);
   final List<Widget>? actions;
   final String title;
+  final String? address;
   final bool centerTitle;
   final Widget? widgetTitle;
   final Widget? leading;
@@ -41,7 +45,9 @@ class WidgetHeader extends StatelessWidget {
       height: AppValues.headerHeight,
       alignment: Alignment.center,
       padding: EdgeInsets.only(top: Get.mediaQuery.viewPadding.top, left: 17, right: 17),
-      decoration: isBackground ? BoxDecoration(gradient: gradient) : BoxDecoration(color: color ?? AppColor.white),
+      decoration: isBackground
+          ? BoxDecoration(gradient: gradient)
+          : BoxDecoration(color: color ?? AppColor.white),
       child: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
@@ -50,11 +56,23 @@ class WidgetHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              leading ??  WidgetButtonBack(color: colorIcon,),
+              leading ??
+                  WidgetButtonBack(
+                    color: colorIcon,
+                  ),
               Expanded(
                 child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: widgetTitle ?? _buildTitle(titleColor),
+                  alignment: centerTitle ? Alignment.center : Alignment.centerLeft,
+                  child: widgetTitle ??
+                      Column(
+                        children: [
+                          _buildTitle(titleColor),
+                          Visibility(
+                            visible: address != null,
+                            child: _buildAddress(titleColor),
+                          )
+                        ],
+                      ),
                 ),
               ),
               ...(actions ?? [])
@@ -62,7 +80,7 @@ class WidgetHeader extends StatelessWidget {
           ),
           Visibility(
               visible: isBackground,
-              child:  const Positioned(
+              child: const Positioned(
                   right: -80,
                   top: -140,
                   child: Opacity(
@@ -89,6 +107,22 @@ class WidgetHeader extends StatelessWidget {
       titleText,
       style: textStyle ??
           AppTextStyles.superLargeBold()
+              .copyWith(color: titleColor ?? Colors.white, fontFamily: Fonts.Quicksand.name),
+      maxLines: centerTitle ? 1 : 1000,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  _buildAddress(Color? titleColor) {
+    var titleText = address;
+    if (isWebView == true) {
+      var unescape = HtmlUnescape();
+      titleText = unescape.convert(address ?? "");
+    }
+    return Text(
+      titleText ?? "",
+      style: textStyle ??
+          AppTextStyles.largeBold()
               .copyWith(color: titleColor ?? Colors.white, fontFamily: Fonts.Quicksand.name),
       maxLines: centerTitle ? 1 : 1000,
       overflow: TextOverflow.ellipsis,

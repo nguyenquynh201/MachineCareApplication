@@ -9,20 +9,28 @@ import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends BaseScreen<MainNavigationController> {
   MainNavigationScreen({Key? key}) : super(key: key);
-  static List<String> tabs = [
+  static List<String> tabsUser = [
     'home'.tr,
     'history'.tr,
     'repair'.tr,
     'product'.tr,
     'personal'.tr
   ];
-  static List<Widget> pages  = const[
+  static List<Widget> pagesUser = const [
     _HomeScreen(),
     _HistoryScreen(),
     _RepairScreen(),
     _ProductScreen(),
     _ProfileScreen()
   ];
+  static List<String> tabsStaff = ['home'.tr, 'history'.tr, 'repair'.tr, 'personal'.tr];
+  static List<Widget> pagesStaff = const [
+    _HomeScreen(),
+    _HistoryScreen(),
+    _RepairScreen(),
+    _ProfileScreen()
+  ];
+
   @override
   Widget buildUi({required BuildContext context}) {
     return WillPopScope(
@@ -40,10 +48,14 @@ class MainNavigationScreen extends BaseScreen<MainNavigationController> {
           builder: (_) {
             return Column(
               children: [
-                Expanded(child: IndexedStack(
-                  index: controller.currentPage.value,
-                  children: pages,
-                ),),
+                Expanded(
+                  child: IndexedStack(
+                    index: controller.currentPage.value,
+                    children: (AppPref.user.sId != null && AppPref.user.role == 'staff')
+                        ? pagesStaff
+                        : pagesUser,
+                  ),
+                ),
                 Container(
                   height: AppValues.footerHeight,
                   padding: EdgeInsets.only(bottom: Get.mediaQuery.viewPadding.bottom),
@@ -59,30 +71,24 @@ class MainNavigationScreen extends BaseScreen<MainNavigationController> {
                     ],
                     color: Colors.white,
                   ),
-                  child: Row(
-                    children: [
-                      _TabView(
-                          index: 0,
-                          title: tabs[0],
-                          controller: controller),
-                      _TabView(
-                          index: 1,
-                          title: tabs[1],
-                          controller: controller),
-                      _TabView(
-                          index: 2,
-                          title: tabs[2],
-                          controller: controller),
-                      _TabView(
-                          index: 3,
-                          title: tabs[3],
-                          controller: controller),
-                      _TabView(
-                          index: 4,
-                          title: tabs[4],
-                          controller: controller),
-                    ],
-                  ),
+                  child: (AppPref.user.sId != null && AppPref.user.role == 'staff')
+                      ? Row(
+                          children: [
+                            _TabView(index: 0, title: tabsUser[0], controller: controller),
+                            _TabView(index: 1, title: tabsUser[1], controller: controller),
+                            _TabView(index: 2, title: tabsUser[2], controller: controller),
+                            _TabView(index: 3, title: tabsUser[3], controller: controller),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            _TabView(index: 0, title: tabsUser[0], controller: controller),
+                            _TabView(index: 1, title: tabsUser[1], controller: controller),
+                            _TabView(index: 2, title: tabsUser[2], controller: controller),
+                            _TabView(index: 3, title: tabsUser[3], controller: controller),
+                            _TabView(index: 4, title: tabsUser[4], controller: controller),
+                          ],
+                        ),
                 )
               ],
             );
@@ -92,6 +98,7 @@ class MainNavigationScreen extends BaseScreen<MainNavigationController> {
     );
   }
 }
+
 class _TabView extends StatelessWidget {
   final int index;
   final String title;
@@ -104,7 +111,9 @@ class _TabView extends StatelessWidget {
   Widget build(BuildContext context) {
     bool selected = index == controller.currentPage.value;
     SvgPicture svgPicture = SvgPicture.asset(
-      controller.imagesSelect[index],
+      (AppPref.user.sId != null && AppPref.user.role == 'staff')
+          ? controller.imagesSelectStaff[index]
+          : controller.imagesSelectUser[index],
       fit: BoxFit.cover,
       color: selected ? AppColor.colorButton : AppColor.primary,
     );
@@ -131,6 +140,7 @@ class _TabView extends StatelessWidget {
     );
   }
 }
+
 class _HomeScreen extends StatelessWidget {
   const _HomeScreen({Key? key}) : super(key: key);
 

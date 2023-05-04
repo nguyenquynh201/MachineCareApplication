@@ -1,6 +1,10 @@
-import 'package:dio/dio.dart';
+
+import 'package:dio/dio.dart'  ;
 import 'package:dio/native_imp.dart';
+import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:machine_care/constants/constants.dart';
+import 'package:machine_care/di/server_locator.dart';
+import 'package:machine_care/resources/repository/auth_repository.dart';
 import 'package:machine_care/utils/utils.dart';
 
 class AppClients extends DioForNative {
@@ -17,7 +21,7 @@ class AppClients extends DioForNative {
     _instance!.options.baseUrl = baseUrl;
     return _instance!;
   }
-
+  final Dio dio = Dio();
   AppClients._({String baseUrl = EndPoint.baseUrl, BaseOptions? options}) : super(options) {
     interceptors.add(InterceptorsWrapper(
       onRequest: _requestInterceptor,
@@ -25,8 +29,20 @@ class AppClients extends DioForNative {
       onError: _errorInterceptor,
     ));
     this.options.baseUrl = baseUrl;
+    this.options.baseUrl = baseUrl;
   }
-
+  Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
+    final options = Options(
+      method: requestOptions.method,
+    );
+    options.headers = {
+      "Authorization": "Bearer ${AppPref.token.accessToken!}"
+    };
+    return dio.request<dynamic>(requestOptions.path,
+        data: requestOptions.data,
+        queryParameters: requestOptions.queryParameters,
+        options: options);
+  }
   _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers.addEntries([ MapEntry('Authorization', 'Bearer ${AppPref.token.accessToken}')]);
     AppLogger.getLogger().shout("headers ${options.headers}");

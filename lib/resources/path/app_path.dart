@@ -19,4 +19,5 @@ abstract class AppPath {
 
   String get address;
 
+  String get user;
 }

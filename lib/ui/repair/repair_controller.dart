@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:machine_care/resources/network_state.dart';
+import 'package:machine_care/utils/app_utils.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../utils/utils.dart';
 import '../ui.dart';
 
 class RepairController extends BaseController{
@@ -15,7 +17,36 @@ class RepairController extends BaseController{
     await getMaintenanceSchedule();
     setLoading(false);
   }
+  Rx<DateTime> fromDate = DateTime.now().obs;
+  Rx<DateTime> toDate = DateTime.now().obs;
+  bool _showCalendar = false;
 
+  bool get showCalendar => _showCalendar;
+
+  void updateBoolShowCalendar() {
+    if (_showCalendar) {
+      _showCalendar = false;
+    } else {
+      _showCalendar = true;
+    }
+  }
+
+  RxInt numberOfWeeks = 0.obs;
+
+
+  void updateNumberOfWeeks(int numberOfWeeks) {
+    this.numberOfWeeks.value = numberOfWeeks;
+  }
+
+  void updateCurrentDate(DateTime date) {
+    AppUtils.logMessage("$date");
+    if (DateTimeUtils.isSameDate(fromDate.value, date)) return;
+    fromDate.value = date;
+    toDate.value = date;
+    numberOfWeeks.value = 0;
+    getMaintenanceSchedule();
+    AppUtils.logMessage("$date");
+  }
   int total = 0;
   RxList maintenanceSchedule = [].obs;
   Future getMaintenanceSchedule() async {

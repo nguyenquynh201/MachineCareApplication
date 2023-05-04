@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.machine_care">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <application
         android:label="machine_care"
         android:name="${applicationName}"
@@ -30,5 +37,15 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_channel_id"
+           android:value="high_importance_channel" />
+
+       <service
+           android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+           android:exported="false"
+           android:stopWithTask="false"
+           tools:ignore="MissingClass"
+           tools:targetApi="ice_cream_sandwich" />
     </application>
 </manifest>

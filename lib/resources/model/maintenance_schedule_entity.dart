@@ -1,6 +1,5 @@
-import 'package:machine_care/enum/target.dart';
-import 'package:machine_care/resources/model/model.dart';
 import 'package:machine_care/resources/model/product_entity.dart';
+import 'package:machine_care/ui/ui.dart';
 
 class MaintenanceScheduleEntity {
   String? sId;
@@ -8,9 +7,10 @@ class MaintenanceScheduleEntity {
   ProductEntity? products;
   List<ErrorMachineEntity>? errorMachine;
   TargetMachine? target;
-  StatusEntity? status;
+  StatusEnum? status;
   List<BugEntity>? bugs;
   List<UserEntity>? relateStaffs;
+  UserAddress? address;
   DateTime? startDate;
   CreateByEntity? createdBy;
   int? totalBugMoney;
@@ -32,7 +32,8 @@ class MaintenanceScheduleEntity {
     this.totalBugMoney,
     this.createdAt,
     this.updatedAt,
-    this.note
+    this.note,
+    this.address
   });
   static List<MaintenanceScheduleEntity> listFromJson(dynamic listJson) => listJson != null
       ? List<MaintenanceScheduleEntity>.from(
@@ -49,7 +50,7 @@ class MaintenanceScheduleEntity {
       });
     }
     target = TargetMachineExtension.valueOf(json['target']);
-    status = json['status'] != null ? StatusEntity.fromJson(json['status']) : null;
+    status = StatusExtenstion.valueOf(json['status']);
     if (json['bugs'] != null) {
       bugs = <BugEntity>[];
       json['bugs'].forEach((v) {
@@ -61,6 +62,9 @@ class MaintenanceScheduleEntity {
       json['relateStaffs'].forEach((v) {
         relateStaffs!.add(UserEntity.fromJson(v));
       });
+    }
+    if(json['address'] != null) {
+    address =   UserAddress.fromJson(json['address']);
     }
     startDate = parseDateTime(json['startDate']);
     createdBy = json['createdBy'] != null ? CreateByEntity.fromJson(json['createdBy']) : null;
@@ -80,12 +84,15 @@ class MaintenanceScheduleEntity {
     if (products != null) {
       data['products'] = products?.sId;
     }
+    if (address != null) {
+      data['address'] = address?.id;
+    }
     if (errorMachine != null) {
-      data['errorMachine'] = errorMachine?.map((e) => e.sId).toList();
+      data['errorMachine'] = this.errorMachine?.map((e) => e.sId.toString()).toList();
     }
     data['target'] = targetValueOf(target);
     if (status != null) {
-      data['status'] = status?.id;
+      data['status'] = StatusExtenstion.statusValueOf(status);
     }
     if (bugs != null) {
       data['bugs'] = bugs?.map((v) => v.toJson()).toList();
@@ -96,6 +103,7 @@ class MaintenanceScheduleEntity {
     data['startDate'] = startDate.toString();
     return data;
   }
+
   String targetValueOf(TargetMachine? target) {
     switch (target) {
       case TargetMachine.frequent:

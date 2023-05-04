@@ -88,12 +88,6 @@ class MaintenanceScheduleRepository {
     bool isDisconnect = await WifiService.isDisconnect();
     if (isDisconnect) return NetworkState.withDisconnect();
     try {
-      final Options options = Options(
-        headers: {
-          "Authorization": "Bearer ${AppPref.token.accessToken}",
-          'content-Type': 'application/json'
-        },
-      );
       AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
       String api = endPoint.maintenanceSchedule;
       Response response = await appClients.post(api, data: entity.toJson());

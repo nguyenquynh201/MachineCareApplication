@@ -25,4 +25,5 @@ export 'widget_header_bottom_sheet.dart';
 export 'widget_ui_dotted_button.dart';
 export 'widget_item_profile.dart';
 export 'widget_ui_radio_title.dart';
+export 'widget_indicator.dart';
 

@@ -9,6 +9,7 @@ class CreateRepairController extends BaseController {
   late TextEditingController noteTextController;
   Rx<String> message = ''.obs;
   Rx<String> content = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -17,15 +18,20 @@ class CreateRepairController extends BaseController {
     noteTextController = TextEditingController();
   }
 
-  final ValueNotifier<TargetMachine> _target = ValueNotifier<TargetMachine>(TargetMachine.frequent);
-  ValueNotifier<TargetMachine> get target => _target;
+  final Rx<TargetMachine> _target = TargetMachine.frequent.obs;
+
+  Rx<TargetMachine> get target => _target;
 
   void updateTarget({TargetMachine? state}) {
     if (state == null || state == _target.value) return;
     _target.value = state;
+    if (_target.value != TargetMachine.frequent) {
+      updateError([]);
+    }
   }
 
   final RxBool _selectedService = false.obs;
+
   RxBool get selectedService => _selectedService;
 
   void updateSelectedService(bool selectedService) {
@@ -33,6 +39,7 @@ class CreateRepairController extends BaseController {
   }
 
   final RxInt _moneyService = 250000.obs;
+
   RxInt get moneyService => _moneyService;
 
   RxList get productList => Get.find<ProductController>().products;
@@ -43,15 +50,15 @@ class CreateRepairController extends BaseController {
     selected.value = product;
   }
 
-  ValueNotifier<DateTime> starTime = ValueNotifier<DateTime>(DateTime.now());
+  DateTime? starTime;
 
   ValueNotifier<TimeOfDay> timeOfDayStart = ValueNotifier<TimeOfDay>(
       TimeOfDay(hour: DateTime.now().toLocal().hour, minute: DateTime.now().toLocal().minute));
 
   void updateStartDate(DateTime dateTime) {
-    starTime.value = dateTime;
+    starTime = dateTime;
     timeOfDayStart.value = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-    _validateTimeNow(starTime.value);
+    _validateTimeNow(starTime ?? DateTime.now());
   }
 
   Rx<CompareTimeState> timeValidateState = (CompareTimeState.none).obs;
@@ -68,10 +75,10 @@ class CreateRepairController extends BaseController {
 
   void updateTime(TimeOfDay? time) {
     if (time == null) return;
-    starTime.value = DateTime(
-      starTime.value.year,
-      starTime.value.month,
-      starTime.value.day,
+    starTime = DateTime(
+      starTime!.year,
+      starTime!.month,
+      starTime!.day,
       time.hour,
       time.minute,
     );
@@ -90,7 +97,7 @@ class CreateRepairController extends BaseController {
     timeOfDayValidateState.value = CompareTimeState.none;
 
     /// chưa check minutes
-    if (DateTimeUtils.getDate(starTime.value) ==
+    if (DateTimeUtils.getDate(starTime!) ==
             DateTime(DateTime.now().toLocal().year, DateTime.now().toLocal().month,
                 DateTime.now().toLocal().day) &&
         (DateTimeUtils.getTimeOfDay(start).hour <= TimeOfDay.now().hour &&
@@ -104,6 +111,7 @@ class CreateRepairController extends BaseController {
   }
 
   RxList<ErrorMachineEntity> error = <ErrorMachineEntity>[].obs;
+
   void updateError(List<ErrorMachineEntity> errors) {
     error.value = errors;
   }
@@ -112,32 +120,45 @@ class CreateRepairController extends BaseController {
     error.removeWhere((element) => value.sId == element.sId);
   }
 
+  Rx<UserAddress> address = UserAddress().obs;
+
+  void updateAddress(UserAddress errors) {
+    address.value = errors;
+  }
+
   Rx<bool> get enable {
-    return (error.isNotEmpty &&
+    return ((_target.value != TargetMachine.frequent ? error.isNotEmpty : error.isEmpty) &&
+            selected.value.sId != null &&
+            starTime != null &&
             timeOfDayValidateState.value == CompareTimeState.none &&
-            timeValidateState.value == CompareTimeState.none && productList.isNotEmpty)
+            timeValidateState.value == CompareTimeState.none &&
+            address.value.id != null &&
+            productList.isNotEmpty)
         .obs;
   }
 
-  void createRepair() async{
+  void createRepair() async {
     setLoading(true);
     MaintenanceScheduleEntity _entity = MaintenanceScheduleEntity(
-      errorMachine: error,
-      products: selected.value.productId,
-      maintenanceContent: message.value,
-      startDate: starTime.value,
-      target: _target.value,
-      status: DataFilter.status.first
-    );
-    try{
+        errorMachine: error.value,
+        products: selected.value.productId,
+        maintenanceContent: message.value,
+        startDate: starTime,
+        target: _target.value,
+        address: address.value,
+        status: StatusEnum.Waiting);
+    try {
       NetworkState state = await appRepository.createRepair(entity: _entity);
-      if(state.isSuccess && state.data != null) {
+      if (state.isSuccess && state.data != null) {
         setLoading(false);
         Get.find<RepairController>().onRefresh();
         Get.back();
         AppUtils.showToast("Tạo lịch sửa chữa thành công!!!");
+      }else {
+        setLoading(false);
+        AppUtils.showToast("Tạo lịch sửa chữa không công!!!");
       }
-    }catch(e) {
+    } catch (e) {
       setLoading(false);
       AppUtils.showToast("Tạo lịch sửa chữa không công!!!");
     }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:machine_care/constants/constants.dart';
-import 'package:machine_care/resources/model/model.dart';
 
 import '../ui.dart';
 class WidgetHeaderHome extends StatelessWidget {
@@ -16,8 +15,9 @@ class WidgetHeaderHome extends StatelessWidget {
             top: Get.mediaQuery.viewPadding.top + 18, left: 24, right: 24, bottom: 12),
         child: Row(
           children: [
-            const WidgetAvatar(
+             WidgetAvatar(
               radius: 24,
+              url: user.avatar ?? "",
             ),
             const SizedBox(
               width: 11,

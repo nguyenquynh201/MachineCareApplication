@@ -10,3 +10,4 @@ export 'error_machine_entity.dart';
 export 'user_address.dart';
 export 'province_entity.dart';
 export 'district_entity.dart';
+export 'notification_data_entity.dart';

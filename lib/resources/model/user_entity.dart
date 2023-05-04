@@ -1,3 +1,5 @@
+import 'package:machine_care/constants/constants.dart';
+import 'package:machine_care/enum/gender_enum.dart';
 import 'package:machine_care/resources/model/model.dart';
 import 'package:machine_care/resources/model/product_entity.dart';
 
@@ -10,9 +12,9 @@ class UserEntity {
   String? username;
   String? createdAt;
   String? updatedAt;
-  int? iV;
   String? lastLogin;
-  String? gender;
+  Gender? gender;
+  String? avatar;
   List<String>? deviceTokens;
   bool? resetPassword;
   List<ProductUserEntity>? listProduct;
@@ -27,7 +29,6 @@ class UserEntity {
     this.username,
     this.createdAt,
     this.updatedAt,
-    this.iV,
     this.lastLogin,
     this.gender,
     this.deviceTokens,
@@ -45,8 +46,9 @@ class UserEntity {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     lastLogin = json['lastLogin'];
-    gender = json['gender'];
-    if (json['deviceTokens'] != null) {
+    gender = GenderExtension.valueOf(json['gender']);
+    avatar = json['avatar'] != null ? "${EndPoint.baseUrl}/${json['avatar']}" : null;
+    if (json['deviceTokens'] != []) {
       deviceTokens = <String>[];
       json['deviceTokens'].forEach((v) {
         deviceTokens?.add(v);
@@ -58,7 +60,7 @@ class UserEntity {
         listProduct?.add(ProductUserEntity.fromJson(v));
       });
     }
-    if (json['listAddress'] != null) {
+    if (json['listAddress'] != []) {
       listAddress = <UserAddress>[];
       json['listAddress'].forEach((v) {
         listAddress?.add(UserAddress.fromJson(v));
@@ -78,7 +80,7 @@ class UserEntity {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['lastLogin'] = lastLogin;
-    data['gender'] = gender;
+    data['gender'] = GenderExtension.genderValueOf(gender);
     if (deviceTokens != null) {
       data['deviceTokens'] = deviceTokens?.map((v) => v.toString()).toList();
     }

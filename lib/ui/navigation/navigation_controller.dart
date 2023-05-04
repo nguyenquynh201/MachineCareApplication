@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:machine_care/routers/app_routes.dart';
 import 'package:machine_care/utils/app_pref.dart';
@@ -8,14 +9,19 @@ class NavigationController extends BaseController {
   void onInit() {
     super.onInit();
     setLoading(false);
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _initialLaunchApp();
     });
     setLoading(true);
   }
   Future _initialLaunchApp() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      print("nè nè è $token");
+
+    }
     appRepository.isUserLoggedIn().then((isLoggedIn) async {
-      print("nè nè è $isLoggedIn");
       if (isLoggedIn) {
         Get.toNamed(Routes.mainNavigation);
       }else {

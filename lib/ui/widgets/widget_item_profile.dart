@@ -32,7 +32,7 @@ class WidgetItemProfile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user?.fullName ?? AppPref.user.fullName!,
+                  user?.fullName ?? AppPref.user.fullName ?? 'noName'.tr,
                   style: AppTextStyles.customTextStyle().copyWith(
                       fontFamily: Fonts.Quicksand.name,
                       color: AppColor.colorButton,

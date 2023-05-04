@@ -6,3 +6,4 @@ export 'string_utils.dart';
 export 'ga_logger.dart';
 export 'currency_formatter.dart';
 export 'date_time_utils.dart';
+export 'validators.dart';

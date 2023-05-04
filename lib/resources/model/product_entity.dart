@@ -3,7 +3,7 @@ import 'package:machine_care/resources/model/file_entity.dart';
 class ProductEntity {
   String? sId;
   String? nameMaintenance;
-  num? serialNumber;
+  String? serialNumber;
   String? manufacturer;
   String? specifications;
   String? yearOfManufacturer;
@@ -27,7 +27,7 @@ class ProductEntity {
   ProductEntity.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     nameMaintenance = json['nameMaintenance'] ?? "";
-    serialNumber = json['serialNumber'] ?? 0;
+    serialNumber = json['serialNumber'] ?? "";
     manufacturer = json['manufacturer'] ?? "";
     specifications = json['specifications'] ?? "";
     yearOfManufacturer = json['yearOfManufacturer'] ?? "";
@@ -35,7 +35,7 @@ class ProductEntity {
     if (json['imageMachine'] != null) {
       imageMachine = <FileEntity>[];
       json['imageMachine'].forEach((v) {
-        imageMachine!.add(FileEntity.fromJson(v));
+        imageMachine?.add(FileEntity.fromJson(v));
       });
     }
     createdAt = json['createdAt'] ?? "";

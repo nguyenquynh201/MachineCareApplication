@@ -27,8 +27,8 @@ class NetworkState<T> {
       message = "";
       response = null;
       total = 0;
-
     }
+    return;
   }
 
   NetworkState.withDisconnect() {

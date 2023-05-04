@@ -76,10 +76,16 @@ class LoginController extends BaseController {
           if (!(userProfile.data as UserEntity).resetPassword!) {
             Get.toNamed(Routes.resetPassword, arguments: userProfile.data);
           } else {
-            Get.toNamed(Routes.information, arguments: userProfile.data);
+            if((userProfile.data as UserEntity).lastLogin != null) {
+              Get.toNamed(Routes.mainNavigation);
+            }else {
+              Get.toNamed(Routes.information, arguments: userProfile.data);
+            }
           }
           AppUtils.showToast('login_success'.tr);
         }
+      }else {
+        AppUtils.showToast('login_fail'.tr);
       }
       setLoading(false);
     } catch (e) {

@@ -41,4 +41,8 @@ class PathMachine extends AppPath{
   // TODO: implement addAddress
   String get address => "$baseUrl/users/address";
 
+  @override
+  // TODO: implement user
+  String get user => "$baseUrl/users";
+
 }

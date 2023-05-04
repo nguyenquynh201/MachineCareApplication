@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:machine_care/constants/app_images.dart';
 import 'package:machine_care/resources/model/banner_entity.dart';
@@ -15,7 +16,14 @@ import 'package:machine_care/utils/utils.dart';
 class MainNavigationController extends BaseController {
   int lastClickBack = 0;
   final currentPage = 0.obs;
-  List<String> imagesSelect = [
+  List<String> imagesSelectUser = [
+    AppImages.iconMenuHome,
+    AppImages.iconMenuHistory,
+    AppImages.iconMenuRepair,
+    AppImages.iconMenuProduct,
+    AppImages.iconMenuProfile,
+  ].obs;
+  List<String> imagesSelectStaff = [
     AppImages.iconMenuHome,
     AppImages.iconMenuHistory,
     AppImages.iconMenuRepair,
@@ -30,7 +38,12 @@ class MainNavigationController extends BaseController {
     await getBanner();
     await getStatus();
   }
-
+  Future updateToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+        await appRepository.updateToken(token: token);
+    }
+  }
   Future getBanner() async {
     NetworkState state = await appRepository.getBanner();
     if(state.isSuccess && state.data != null) {
@@ -59,24 +72,45 @@ class MainNavigationController extends BaseController {
         },
       );
     } else {
-      if (index == 0) {
-        Get.find<HomeController>().scrollToTop();
+      if(AppPref.user.sId != null && AppPref.user.role == 'staff') {
+        pageStaff(index);
+      }else {
+        pageUser(index);
       }
-      if (index == 1) {
-        Get.find<HistoryController>().scrollToTop();
-      }
-      if (index == 2) {
-        Get.find<RepairController>().scrollToTop();
-      }
-      if (index == 3) {
-        Get.find<ProductController>().scrollToTop();
-      }
-      if (index == 4) {
-        Get.find<ProfileController>().scrollToTop();
-      }
+
     }
   }
-
+  pageUser(int index) {
+    if (index == 0) {
+      Get.find<HomeController>().scrollToTop();
+    }
+    if (index == 1) {
+      Get.find<HistoryController>().scrollToTop();
+    }
+    if (index == 2) {
+      Get.find<RepairController>().scrollToTop();
+    }
+    if (index == 3) {
+      Get.find<ProductController>().scrollToTop();
+    }
+    if (index == 4) {
+      Get.find<ProfileController>().scrollToTop();
+    }
+  }
+  pageStaff(int index) {
+    if (index == 0) {
+      Get.find<HomeController>().scrollToTop();
+    }
+    if (index == 1) {
+      Get.find<HistoryController>().scrollToTop();
+    }
+    if (index == 2) {
+      Get.find<RepairController>().scrollToTop();
+    }
+    if (index == 3) {
+      Get.find<ProfileController>().scrollToTop();
+    }
+  }
   Map<String, String> showGALogger = {
     'H01_explore': 'Màn hình trang chủ',
     'HTR01_history': 'Màn hình lịch sử',

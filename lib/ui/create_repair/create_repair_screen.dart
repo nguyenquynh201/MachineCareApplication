@@ -16,113 +16,107 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
     return WidgetLoadingFullScreen<CreateRepairController>(
       child: Scaffold(
         backgroundColor: AppColor.colorBanner,
-        body:  Column(
+        body: Column(
           children: [
             WidgetHeader(
               title: 'create_repair'.tr,
               isBackground: true,
-              actions: [
-                GestureDetector(
-                  onTap: () {
-
-                  },
-                  child: const WidgetSvg(
-                    path: AppImages.iconEdit,
-                    fit: BoxFit.contain,
-                    height: 24,
-                    width: 24,
-                  ),
-                )
-              ],
+              // actions: [
+              //   GestureDetector(
+              //     onTap: () {},
+              //     child: const WidgetSvg(
+              //       path: AppImages.iconEdit,
+              //       fit: BoxFit.contain,
+              //       height: 24,
+              //       width: 24,
+              //     ),
+              //   )
+              // ],
             ),
-            ValueListenableBuilder(
-                valueListenable: controller.target,
-                builder: (_, target, __) {
-                  return Container(
-                    width: Get.width,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                    decoration: BoxDecoration(color: AppColor.white, boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0, 4),
-                          blurRadius: 10,
-                          color: AppColor.black.withOpacity(0.1))
-                    ]),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 37,
-                          height: 37,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: AppColor.colorTitleHome),
-                          child: const Center(
-                            child: WidgetSvg(
-                              path: AppImages.iconMenuRepair,
-                              width: 24,
-                              height: 24,
-                              fit: BoxFit.contain,
+            Obx(() => Container(
+                  width: Get.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                  decoration: BoxDecoration(color: AppColor.white, boxShadow: [
+                    BoxShadow(
+                        offset: const Offset(0, 4),
+                        blurRadius: 10,
+                        color: AppColor.black.withOpacity(0.1))
+                  ]),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 37,
+                        height: 37,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: AppColor.colorTitleHome),
+                        child: const Center(
+                          child: WidgetSvg(
+                            path: AppImages.iconMenuRepair,
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'service'.tr,
+                              style: AppTextStyles.customTextStyle().copyWith(
+                                  fontFamily: Fonts.Quicksand.name,
+                                  fontSize: 10,
+                                  color: AppColor.colorTitleHome,
+                                  fontWeight: FontWeight.w400),
                             ),
+                            Text(
+                              StringUtils.targetMachineType(targetMachine: controller.target.value),
+                              style: AppTextStyles.customTextStyle().copyWith(
+                                  fontFamily: Fonts.Quicksand.name,
+                                  fontSize: 10,
+                                  color: AppColor.colorButton,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.bottomSheet(BottomSheetService(updateTarget: (value) {
+                            controller.updateTarget(state: value);
+                          }),
+                              backgroundColor: AppColor.white,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                              enterBottomSheetDuration: const Duration(milliseconds: 500),
+                              barrierColor: Colors.black.withOpacity(0.3));
+                        },
+                        child: const RotatedBox(
+                          quarterTurns: 1,
+                          child: WidgetSvg(
+                            path: AppImages.icNext,
+                            color: AppColor.colorTitleHome,
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'service'.tr,
-                                style: AppTextStyles.customTextStyle().copyWith(
-                                    fontFamily: Fonts.Quicksand.name,
-                                    fontSize: 10,
-                                    color: AppColor.colorTitleHome,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Text(
-                                StringUtils.targetMachineType(targetMachine: target),
-                                style: AppTextStyles.customTextStyle().copyWith(
-                                    fontFamily: Fonts.Quicksand.name,
-                                    fontSize: 10,
-                                    color: AppColor.colorButton,
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.bottomSheet(BottomSheetService(updateTarget: (value) {
-                              controller.updateTarget(state: value);
-                            }),
-                                backgroundColor: AppColor.white,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-                                enterBottomSheetDuration: const Duration(milliseconds: 500),
-                                barrierColor: Colors.black.withOpacity(0.3));
-                          },
-                          child: const RotatedBox(
-                            quarterTurns: 1,
-                            child: WidgetSvg(
-                              path: AppImages.icNext,
-                              color: AppColor.colorTitleHome,
-                              width: 24,
-                              height: 24,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }),
+                      )
+                    ],
+                  ),
+                )),
             Expanded(child: _buildInformation(context: context))
-
           ],
         ),
       ),
     );
   }
+
   Widget _buildInformation({required BuildContext context}) {
     return Obx(() => SingleChildScrollView(
           child: Container(
@@ -181,26 +175,22 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: ValueListenableBuilder(
-                            valueListenable: controller.starTime,
-                            builder: (_, startTime, __) {
-                              return _buildDateInput(
-                                  title: 'day'.tr,
-                                  des: "(Bắt buộc)",
-                                  controller: controller.startDateController,
-                                  context: context,
-                                  selectedDate: startTime,
-                                  errorMessage: StringUtils.toErrorTimeString(
-                                      controller.timeValidateState.value),
-                                  onUpdate: (dateTime) {
-                                    String towDigits(int n) => n.toString().padLeft(2, '0');
-                                    String? index = towDigits(DateTime.now().minute);
-                                    controller.timeOfDayStartController.text =
-                                        "${DateTime.now().hour} : $index";
-                                    controller.updateStartDate(dateTime);
-                                    controller.updateStartTimeOfDay(TimeOfDay(
-                                        hour: DateTime.now().hour, minute: DateTime.now().minute));
-                                  });
+                        child: _buildDateInput(
+                            title: 'day'.tr,
+                            des: "(Bắt buộc)",
+                            controller: controller.startDateController,
+                            context: context,
+                            selectedDate: controller.starTime ?? DateTime.now(),
+                            errorMessage: StringUtils.toErrorTimeString(
+                                controller.timeValidateState.value),
+                            onUpdate: (dateTime) {
+                              String towDigits(int n) => n.toString().padLeft(2, '0');
+                              String? index = towDigits(DateTime.now().minute);
+                              controller.timeOfDayStartController.text =
+                              "${DateTime.now().hour} : $index";
+                              controller.updateStartDate(dateTime);
+                              controller.updateStartTimeOfDay(TimeOfDay(
+                                  hour: DateTime.now().hour, minute: DateTime.now().minute));
                             }),
                       ),
                       const SizedBox(
@@ -225,7 +215,12 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
                     ],
                   ),
                 ),
-                WidgetItemChildRepair(title: 'error'.tr ,  des: "(Bắt buộc)", child: _buildError()),
+                Visibility(
+                    visible: controller.target.value != TargetMachine.frequent,
+                    child: WidgetItemChildRepair(
+                        title: 'error'.tr, des: "(Bắt buộc)", child: _buildError())),
+                WidgetItemChildRepair(
+                    title: 'address'.tr, des: "(Bắt buộc)", child: _buildAddress()),
                 WidgetItemChildRepair(
                     title: 'error_other'.tr,
                     child: _WidgetTexField(
@@ -343,6 +338,83 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
           ],
         ));
   }
+  Widget _buildAddress() {
+    return Obx(() => Column(
+          children: [
+            Visibility(
+                visible: controller.address.value.id == null,
+                child: GestureDetector(
+                  onTap: () async {
+                    Get.bottomSheet(
+                        BottomSheetAddress(
+                            selectedAddress: controller.address.value,
+                            onUpdateAddress: (address) {
+                              controller.updateAddress(address);
+                            }),
+                        backgroundColor: AppColor.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                        enterBottomSheetDuration: const Duration(milliseconds: 500),
+                        barrierColor: Colors.black.withOpacity(0.3));
+                  },
+                  child: Container(
+                    height: 46,
+                    padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 20),
+                    decoration: BoxDecoration(
+                        color: AppColor.colorBanner,
+                        border: Border.all(color: AppColor.colorTitleHome, width: 1),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Text(
+                          'list_address'.tr,
+                          style: AppTextStyles.customTextStyle().copyWith(
+                              fontFamily: Fonts.Quicksand.name,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.colorButton),
+                        )),
+                        const RotatedBox(
+                            quarterTurns: 1,
+                            child: WidgetSvg(
+                              path: AppImages.icNext,
+                              height: 24,
+                              width: 24,
+                              color: AppColor.colorButton,
+                              fit: BoxFit.contain,
+                            ))
+                      ],
+                    ),
+                  ),
+                )),
+            Visibility(
+              visible: controller.address.value.id != null,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WidgetAddress( isHide: true,entity: controller.address.value, onPressed: () {
+                    Get.bottomSheet(
+                        BottomSheetAddress(
+                            selectedAddress: controller.address.value,
+                            onUpdateAddress: (address) {
+                              controller.updateAddress(address);
+                            }),
+                        backgroundColor: AppColor.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                        enterBottomSheetDuration: const Duration(milliseconds: 500),
+                        barrierColor: Colors.black.withOpacity(0.3));
+                  }, ),
+
+                ],
+              ),
+            )
+          ],
+        ));
+  }
 
   Widget _buildDateInput(
       {required String title,
@@ -387,6 +459,7 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
           controller: controller,
           typeInput: TypeInput.custom,
           errorMessage: errorMessage,
+          enable: false,
           onRightIconPressed: () async {
             final DateTime? result = await pickDate(context, selectedDate);
             if (result == null) return;
@@ -394,7 +467,6 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
             onUpdate?.call(result);
           },
           iconRight: Container(
-            color: AppColor.white,
             padding: const EdgeInsets.all(10),
             child: const WidgetSvg(
               path: AppImages.icCalendar,
@@ -463,6 +535,7 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
           keyboardType: TextInputType.text,
           controller: controller,
           typeInput: TypeInput.custom,
+          enable: false,
           onRightIconPressed: () async {
             final TimeOfDay? result = await showTime(context, selectedTime);
             if (result == null) return;
@@ -471,7 +544,6 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
             onUpdate?.call(result);
           },
           iconRight: Container(
-            color: AppColor.white,
             padding: const EdgeInsets.all(10),
             child: const WidgetSvg(
               path: AppImages.iconAlarm,
@@ -691,7 +763,7 @@ class WidgetItemChildRepair extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        _buildTitle(title: title , des: des),
+        _buildTitle(title: title, des: des),
         const SizedBox(
           height: 10,
         ),
@@ -699,12 +771,11 @@ class WidgetItemChildRepair extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-
       ],
     );
   }
 
-  Widget _buildTitle({required String title , String? des}) {
+  Widget _buildTitle({required String title, String? des}) {
     return Row(
       children: [
         Text(

@@ -22,7 +22,7 @@ class WidgetInput extends StatelessWidget {
       this.onSubmitted,
       this.typeInput = TypeInput.none,
       this.iconRight,
-      this.isReasonable = false})
+      this.isReasonable = false , this.enable = true})
       : super(key: key);
   final String? hint;
   final String? errorMessage;
@@ -37,6 +37,7 @@ class WidgetInput extends StatelessWidget {
   final TypeInput typeInput;
   final bool isReasonable;
   final Widget? iconRight;
+  final bool enable;
 
   @override
   Widget build(BuildContext context) {
@@ -96,21 +97,25 @@ class WidgetInput extends StatelessWidget {
                       controller: controller,
                       onChanged: onChanged,
                       onSubmitted: onSubmitted,
-                      style:  TextStyle(
+                      style: TextStyle(
                           fontSize: 14,
                           height: 1.25,
                           fontWeight: FontWeight.w600,
                           fontFamily: Fonts.Quicksand.name,
-                          color: AppColor.colorTitleHome
-                      ),
+                          color: AppColor.colorTitleHome),
                       textAlignVertical: TextAlignVertical.center,
                       obscureText: obscureText,
                       autocorrect: false,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: hint,
-                        hintStyle:
-                             TextStyle(fontSize: 14, height: 1.25, color: AppColor.primary , fontFamily: Fonts.Quicksand.name , fontWeight: FontWeight.w600),
+                        enabled: enable,
+                        hintStyle: TextStyle(
+                            fontSize: 14,
+                            height: 1.25,
+                            color: AppColor.primary,
+                            fontFamily: Fonts.Quicksand.name,
+                            fontWeight: FontWeight.w600),
                       ),
                       keyboardType: keyboardType,
                     ),
@@ -119,7 +124,7 @@ class WidgetInput extends StatelessWidget {
               ),
               if (iconRight != null)
                 Material(
-                    color: AppColor.white,
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(20),
                     child: InkWell(
                         borderRadius: BorderRadius.circular(20),
