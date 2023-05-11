@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:machine_care/constants/constants.dart';
 import 'package:machine_care/ui/ui.dart';
 
@@ -8,7 +9,53 @@ class StringUtils {
     if (s.trim().isEmpty) return true;
     return false;
   }
+  static String getDifferenceTimeString({
+    required String dateStr,
+  }) {
+    final DateTime date = DateTime.parse(dateStr);
+    final int inDays = DateTime.now().difference(date).inDays;
 
+    if (inDays > DateTime.daysPerWeek) {
+      return getDateStrings(dateStr);
+    }
+
+    if (inDays != 0) {
+      return "$inDays ngày trước";
+    }
+
+    final int inHours = DateTime.now().difference(date).inHours;
+
+    if (inHours != 0) {
+      return "$inHours giờ trước";
+    }
+
+    final int inMinutes = DateTime.now().difference(date).inMinutes;
+
+    if (inMinutes != 0) {
+      return "$inMinutes phút trước";
+    }
+
+    return "Ngay bây giờ";
+  }
+  static String getDateString(String dateStr) {
+    final DateTime date = DateTime.parse(dateStr);
+    return "${date.year}/${_twoDigits(date.month)}/${_twoDigits(date.day)}";
+  }
+
+  static String getDateStrings(String dateStr) {
+    final DateTime date = DateTime.parse(dateStr);
+    return "${date.day}/${_twoDigits(date.month)}/${_twoDigits(date.year)}";
+  }
+
+  static String getTimeString(String dateStr) {
+    final DateTime date = DateTime.parse(dateStr);
+    return DateFormat('hh:mm a').format(date);
+  }
+
+  static String _twoDigits(int n) {
+    if (n >= 10) return "$n";
+    return "0$n";
+  }
   //InvalidPhoneState
   static String toInvalidPhoneString(ValidatePhoneState state) {
     switch (state) {
@@ -91,7 +138,7 @@ class StringUtils {
 
   static Color statusColor(String status) {
     switch (status) {
-      case "new":
+      case "coming":
         return HexColor.fromHex("#0BA5EC");
       case "waiting":
         return HexColor.fromHex("#F79009");

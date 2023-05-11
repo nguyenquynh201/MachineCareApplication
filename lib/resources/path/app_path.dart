@@ -20,4 +20,10 @@ abstract class AppPath {
   String get address;
 
   String get user;
+
+  String get rating;
+
+  String get maintenanceScheduleHistory;
+
+  String get notification;
 }

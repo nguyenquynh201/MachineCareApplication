@@ -8,11 +8,12 @@ class AppRepository {
   final AuthRepository authRepository;
   final ProductRepository productRepository;
   final MaintenanceScheduleRepository maintenanceScheduleRepository;
-
-  AppRepository({
+  final NotificationRepository notificationRepository;
+  AppRepository( {
     required this.authRepository,
     required this.productRepository,
     required this.maintenanceScheduleRepository,
+    required this.notificationRepository,
   });
 
   Future<NetworkState<AuthEntity>> login(String phone, String password) async {
@@ -37,8 +38,23 @@ class AppRepository {
     return await productRepository.getProduct();
   }
 
-  Future<NetworkState<List<MaintenanceScheduleEntity>>> getMaintenanceSchedule() async {
-    return await maintenanceScheduleRepository.getMaintenanceSchedule();
+  Future<NetworkState<List<MaintenanceScheduleEntity>>> getMaintenanceSchedule({
+    required int offset,
+    required int limit,
+    DateTime? from,
+    DateTime? to,
+  }) async {
+    return await maintenanceScheduleRepository.getMaintenanceSchedule(
+      offset: offset,
+      limit: limit,
+      from: DateTimeUtils.getCurrentDate(from),
+      to: DateTimeUtils.getCurrentDate(to),
+    );
+  }
+
+  Future<NetworkState<MaintenanceScheduleEntity>> getMaintenanceScheduleById(
+      {required String id}) async {
+    return await maintenanceScheduleRepository.getMaintenanceScheduleById(id: id);
   }
 
   Future<NetworkState<List<ErrorMachineEntity>>> getErrorMachine() async {
@@ -52,6 +68,10 @@ class AppRepository {
   Future<NetworkState<MaintenanceScheduleEntity>> createRepair(
       {required MaintenanceScheduleEntity entity}) async {
     return await maintenanceScheduleRepository.createRepair(entity: entity);
+  }
+  Future<NetworkState<MaintenanceScheduleEntity>> updateRepair(
+      {required String id,required MaintenanceScheduleEntity entity}) async {
+    return await maintenanceScheduleRepository.updateRepair( id: id,entity: entity);
   }
 
   Future<NetworkState<List<ProvinceEntity>>> getProvince(
@@ -67,17 +87,46 @@ class AppRepository {
   Future<NetworkState<UserAddress>> addAddress({required UserAddress entity}) async {
     return await maintenanceScheduleRepository.createAddress(entity: entity);
   }
+  Future<NetworkState<RatingEntity>> updateRating({required RatingEntity entity}) async {
+    return await maintenanceScheduleRepository.updateRating(entity: entity);
+  }
 
   Future<NetworkState<List<UserAddress>>> getAddress() async {
     return await maintenanceScheduleRepository.getAddress();
   }
-  Future<NetworkState<dynamic>> updateToken({required String token }) async {
+
+  Future<NetworkState<dynamic>> updateToken({required String token}) async {
     return await authRepository.updateToken(token: token);
   }
+  Future<NetworkState<List<HistoryRepairEntity>>> getHistory({required String id}) async {
+    return await maintenanceScheduleRepository.getHistory(id: id);
+  }
 
-  Future<bool> isUserLoggedIn() async {
+  Future<NetworkState<List<NotificationEntity>>> getNotification({
+    required int offset,
+    required int limit
+  }) async {
+    return await notificationRepository.getNotification(
+      offset: offset,
+      limit: limit,
+    );
+  }
+  Future<NetworkState<NotificationEntity>> getNotificationById({required String id}) async {
+    return await notificationRepository.getNotificationById(id: id);
+  }
+
+  Future<NetworkState<dynamic>> readNotification({required String id}) async {
+    return notificationRepository.readNotification(id: id);
+  }
+  Future<NetworkState<dynamic>> updateRequestReceived({required String id , required String idAdmin , required Map<String , dynamic> data}) async {
+    return notificationRepository.updateRequestReceived(id: id, idAdmin: idAdmin, data: data);
+  }
+
+
+    Future<bool> isUserLoggedIn() async {
     try {
       if (AppPref.token.accessToken == null || AppPref.token.accessToken!.isEmpty) return false;
+
       /// get new token
       final state = await authRepository.refreshToken(
         accessToken: AppPref.token.accessToken!,

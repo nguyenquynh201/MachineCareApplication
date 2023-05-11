@@ -22,8 +22,9 @@ class WidgetItemProfile extends StatelessWidget {
         child: user != null
             ? Row(
           children: [
-            const WidgetAvatar(
+             WidgetAvatar(
               radius: 24,
+              url: user!.avatar,
             ),
             const SizedBox(
               width: 11,
@@ -43,7 +44,7 @@ class WidgetItemProfile extends StatelessWidget {
                   height: 4,
                 ),
                 Text(
-                  user?.phone ?? AppPref.user.phone!,
+                  user?.phone ?? AppPref.user.phone ?? "",
                   style: AppTextStyles.customTextStyle().copyWith(
                       fontFamily: Fonts.Quicksand.name,
                       color: AppColor.colorTitleHome,

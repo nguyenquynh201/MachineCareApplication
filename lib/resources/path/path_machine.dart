@@ -45,4 +45,16 @@ class PathMachine extends AppPath{
   // TODO: implement user
   String get user => "$baseUrl/users";
 
+  @override
+  // TODO: implement rating
+  String get rating => "$baseUrl/maintenance-schedule-rate";
+
+  @override
+  // TODO: implement maintenanceScheduleHistory
+  String get maintenanceScheduleHistory => "$baseUrl/maintenance-schedule-notification";
+
+  @override
+  // TODO: implement notification
+  String get notification => "$baseUrl/Notifications";
+
 }

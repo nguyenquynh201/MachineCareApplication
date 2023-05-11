@@ -11,22 +11,22 @@ class MainNavigationScreen extends BaseScreen<MainNavigationController> {
   MainNavigationScreen({Key? key}) : super(key: key);
   static List<String> tabsUser = [
     'home'.tr,
-    'history'.tr,
+    'notification'.tr,
     'repair'.tr,
     'product'.tr,
     'personal'.tr
   ];
   static List<Widget> pagesUser = const [
     _HomeScreen(),
-    _HistoryScreen(),
+    _NotificationScreen(),
     _RepairScreen(),
     _ProductScreen(),
     _ProfileScreen()
   ];
-  static List<String> tabsStaff = ['home'.tr, 'history'.tr, 'repair'.tr, 'personal'.tr];
+  static List<String> tabsStaff = ['home'.tr, 'notification'.tr, 'repair'.tr, 'personal'.tr];
   static List<Widget> pagesStaff = const [
     _HomeScreen(),
-    _HistoryScreen(),
+    _NotificationScreen(),
     _RepairScreen(),
     _ProfileScreen()
   ];
@@ -150,12 +150,12 @@ class _HomeScreen extends StatelessWidget {
   }
 }
 
-class _HistoryScreen extends StatelessWidget {
-  const _HistoryScreen({Key? key}) : super(key: key);
+class _NotificationScreen extends StatelessWidget {
+  const _NotificationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return HistoryScreen();
+    return NotificationScreen();
   }
 }
 

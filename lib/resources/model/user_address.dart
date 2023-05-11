@@ -15,23 +15,22 @@ class UserAddress {
   String? createdAt;
   String? updatedAt;
 
-
   UserAddress(
       {this.id,
-        this.userId,
-        this.fixed,
-        this.nameAddress,
-        this.gender,
-        this.phone,
-        this.addressProvince,
-        this.addressDistrict,
-        this.addressUser,
-        this.createdAt,
-        this.updatedAt});
-  static List<UserAddress> listFromJson(dynamic listJson) => listJson != null
-      ? List<UserAddress>.from(
-      listJson.map((x) => UserAddress.fromJson(x)))
-      : [];
+      this.userId,
+      this.fixed,
+      this.nameAddress,
+      this.gender,
+      this.phone,
+      this.addressProvince,
+      this.addressDistrict,
+      this.addressUser,
+      this.createdAt,
+      this.updatedAt});
+
+  static List<UserAddress> listFromJson(dynamic listJson) =>
+      listJson != null ? List<UserAddress>.from(listJson.map((x) => UserAddress.fromJson(x))) : [];
+
   UserAddress.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     userId = json['userId'];
@@ -47,15 +46,15 @@ class UserAddress {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['userId'] = userId;
-    data['fixed'] = fixed;
-    data['nameAddress'] = nameAddress;
-    data['gender'] = GenderExtension.genderValueOf(gender);
-    data['phone'] = phone;
-    data['addressProvince'] = addressProvince;
-    data['addressDistrict'] = addressDistrict;
-    data['addressUser'] = addressUser;
-    return data;
+    return {
+      "userId": userId,
+      "fixed": fixed,
+      "nameAddress": nameAddress,
+      "gender": GenderExtension.genderValueOf(gender),
+      "phone": phone,
+      "addressProvince": addressProvince,
+      "addressDistrict": addressDistrict,
+      "addressUser": addressUser,
+    };
   }
 }

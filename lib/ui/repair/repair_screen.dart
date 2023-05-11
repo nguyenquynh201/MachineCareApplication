@@ -18,44 +18,65 @@ class RepairScreen extends BaseScreen<RepairController> {
           WidgetHeader(
             title: 'maintenance_schedule'.tr,
             actions: [
-              GestureDetector(
-                  onTap: () {
-                    Get.toNamed(Routes.createRepair);
-                  },
-                  child: const WidgetSvg(
-                    path: AppImages.icAdd,
-                    width: 24,
-                    height: 24,
-                    color: AppColor.colorButton,
-                  ))
+              (AppPref.user.sId != null && AppPref.user.role == 'staff')
+                  ? Container()
+                  : GestureDetector(
+                      onTap: () async {
+                        final _ = await Get.toNamed(Routes.createRepair);
+                        if (_ && _ != null) {
+                          controller.onRefresh();
+                        }
+                      },
+                      child: const WidgetSvg(
+                        path: AppImages.icAdd,
+                        width: 24,
+                        height: 24,
+                        color: AppColor.colorButton,
+                      ))
             ],
             leading: Container(),
           ),
-          Obx(() => Column(
-                children: [],
-              )),
-          Expanded(child: GetX<RepairController>(
-            builder: (_) {
-              return WidgetLoadMoreRefresh(
-                controller: _.refreshController,
-                onLoadMore: _.getMaintenanceSchedule,
-                onRefresh: _.onRefresh,
-                child: _.loading.value
-                    ? const WidgetLoading()
-                    : SingleChildScrollView(
-                        child: WidgetListMaintenanceSchedule(controller: _),
-                      ),
-              );
-            },
-          ))
+         Expanded(child: _buildBody())
         ],
       ),
     );
   }
-
+  Widget _buildBody() {
+    return GetX<RepairController>(builder: (_) {
+      return Column(
+        children: [
+          Column(
+            children: [
+              _buildSelectedDateHeader(
+                  fromDate: controller.fromDate.value, toDate: controller.toDate.value),
+              if(controller.showCalendar.value)
+                _buildCalendars(
+                    fromDate: controller.fromDate.value, toDate: controller.toDate.value , onUpdate: (date) {
+                  controller.updateCurrentDate(date);
+                })
+            ],
+          ),
+          Expanded(
+            child: WidgetLoadMoreRefresh(
+              controller: _.refreshController,
+              onLoadMore: _.getMaintenanceSchedule,
+              onRefresh: _.onRefresh,
+              isNotEmpty: _.maintenanceSchedule.isNotEmpty,
+              child: _.loading.value
+                  ? const WidgetLoading()
+                  : SingleChildScrollView(
+                child: WidgetListMaintenanceSchedule(controller: controller),
+              ),
+            ),
+          )
+        ],
+      );
+    });
+  }
   Widget _buildCalendars({
     required DateTime fromDate,
     required DateTime toDate,
+    required Function(DateTime) onUpdate
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -65,7 +86,7 @@ class RepairScreen extends BaseScreen<RepairController> {
         children: [
           TableCalendar(
             onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-              controller.updateCurrentDate(selectedDay);
+              onUpdate.call(selectedDay);
             },
             firstDay: DateTime.utc(
               fromDate.year - 1,
@@ -132,6 +153,8 @@ class RepairScreen extends BaseScreen<RepairController> {
                               : "${_currentDateToString(fromDate)} - ${_currentDateToString(toDate)}",
                           style: AppTextStyles.customTextStyle().copyWith(
                             fontWeight: FontWeight.w600,
+                            color: AppColor.black,
+                            fontFamily: Fonts.Quicksand.name,
                             fontSize: 20,
                           ),
                         ),
@@ -139,11 +162,12 @@ class RepairScreen extends BaseScreen<RepairController> {
                     ),
                     UIIconButton(
                       child: RotatedBox(
-                        quarterTurns: controller.showCalendar ? 1 : 3,
+                        quarterTurns: controller.showCalendar.value ? 1 : 3,
                         child: const WidgetSvg(
                           path: AppImages.iconChevronLeft,
                           height: 32,
                           width: 32,
+
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -215,167 +239,28 @@ class WidgetListMaintenanceSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: controller.maintenanceSchedule.length,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 17),
-        shrinkWrap: true,
-        itemBuilder: (_, index) {
-          return itemBuilder(controller.maintenanceSchedule, index);
-        });
+    return GetX<RepairController>(builder: (_) {
+      return ListView.builder(
+          itemCount: controller.maintenanceSchedule.length,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 17),
+          shrinkWrap: true,
+          itemBuilder: (_, index) {
+            return itemBuilder(controller.maintenanceSchedule, index);
+          });
+    });
   }
 
-  static EdgeInsets padding = const EdgeInsets.symmetric(
-    vertical: 10,
-    horizontal: 24,
-  );
-  static const EdgeInsets zero = EdgeInsets.only();
+
 
   Widget itemBuilder(List<dynamic> data, int index) {
     MaintenanceScheduleEntity entity = data[index];
-    return GestureDetector(
-      child: Stack(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            padding: padding,
-            width: Get.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: AppColor.colorBgProfile,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          (entity.maintenanceContent != EndPoint.EMPTY_STRING)
-                              ? entity.maintenanceContent!
-                              : StringUtils.targetMachineType(targetMachine: entity.target),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.customTextStyle().copyWith(
-                              color: AppColor.colorButton,
-                              fontSize: 18,
-                              fontFamily: Fonts.Quicksand.name,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          StringUtils.targetMachineType(targetMachine: entity.target),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.customTextStyle().copyWith(
-                              color: AppColor.colorTitleHome,
-                              fontSize: 14,
-                              fontFamily: Fonts.Quicksand.name,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                    _buildTimeLine(startTime: entity.startDate ?? DateTime.now()),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (entity.totalBugMoney != null)
-                      _buildTotalMoney(
-                        totalMoney:
-                            CurrencyFormatter.encoded(price: entity.totalBugMoney!.toString()),
-                      ),
-                    if (entity.status != null) _buildStatus(entity: entity.status),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            left: 0,
-            top: 25,
-            child: Container(
-                height: 24,
-                width: 7,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(4),
-                      bottomRight: Radius.circular(4),
-                    ),
-                    color: StringUtils.statusTypeColor(data[index].status))),
-          ),
-        ],
-      ),
-    );
+    return WidgetItemRepair(entity: entity, onPressed: () async{
+      final _ = await Get.toNamed(Routes.repairDetail , arguments: entity);
+      if(_ != null && _) {
+        controller.onRefresh();
+      }
+    });
   }
 
-  Widget _buildTotalMoney({required String totalMoney}) {
-    return Text(
-      "${'total_money'.tr}: ${totalMoney.toString()} VND",
-      style: AppTextStyles.customTextStyle().copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: AppColor.colorHelp,
-          fontFamily: Fonts.Quicksand.name),
-    );
-  }
-
-  Widget _buildTimeLine({
-    required DateTime startTime,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const WidgetSvg(
-          path: AppImages.icCalendar,
-          width: 16,
-          height: 16,
-          fit: BoxFit.contain,
-          color: AppColor.colorTitleHome,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          DateFormat('dd/MM/yyyy').format(startTime),
-          style: AppTextStyles.customTextStyle().copyWith(
-            fontSize: 13,
-            fontFamily: Fonts.Quicksand.name,
-            fontWeight: FontWeight.w400,
-            color: AppColor.colorTitleHome,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatus({StatusEnum? entity}) {
-    if (entity != null) {
-      return Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
-        decoration: BoxDecoration(
-            color: StringUtils.statusTypeColor(entity).withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20)),
-        child: Text(
-          StringUtils.statusValueOf(entity),
-          style: AppTextStyles.customTextStyle().copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              fontFamily: Fonts.Quicksand.name,
-              color: StringUtils.statusTypeColor(entity)),
-        ),
-      );
-    } else {
-      return Container();
-    }
-  }
 }

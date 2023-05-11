@@ -22,6 +22,7 @@ class AppColor {
   static const Color description = Color(0xFFC1C1C7);
   static const Color textGray = Color(0xFF8D8D8D);
   static const Color colorCheckBox = Color(0xFF2DEA40);
+  static const Color colorEdit = Color(0xFF5E5E5E);
 
 
   static LinearGradient get getGradientPrimary {

@@ -3,6 +3,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:machine_care/constants/app_colors.dart';
 import 'package:machine_care/constants/app_images.dart';
 import 'package:machine_care/constants/app_text_styles.dart';
+import 'package:machine_care/ui/create_edit_address/widget/widget.dart';
 import 'package:machine_care/utils/string_utils.dart';
 import 'package:machine_care/utils/utils.dart';
 
@@ -317,51 +318,3 @@ class CreateEditAddressScreen extends BaseScreen<CreateEditAddressController> {
   }
 }
 
-class WidgetItemAddress extends StatelessWidget {
-  const WidgetItemAddress({Key? key, required this.title, this.des, required this.child})
-      : super(key: key);
-  final String title;
-  final String? des;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildTitle(title: title, des: des),
-        const SizedBox(
-          height: 10,
-        ),
-        child
-      ],
-    );
-  }
-
-  Widget _buildTitle({required String title, String? des}) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.customTextStyle().copyWith(
-              fontFamily: Fonts.Quicksand.name,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColor.black),
-        ),
-        const SizedBox(
-          width: 13,
-        ),
-        if (des != null)
-          Text(
-            des,
-            style: AppTextStyles.customTextStyle().copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColor.primary,
-                fontStyle: FontStyle.italic,
-                fontFamily: Fonts.Quicksand.name),
-          )
-      ],
-    );
-  }
-}

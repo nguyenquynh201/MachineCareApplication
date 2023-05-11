@@ -4,13 +4,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../ui.dart';
 
 class AddressController extends BaseController {
-  late RefreshController refreshController;
+   RefreshController refreshController = RefreshController();
 
   @override
   void onInit() async {
     super.onInit();
     setLoading(true);
-    refreshController = RefreshController();
     await getAddress();
     setLoading(false);
   }

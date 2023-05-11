@@ -19,38 +19,33 @@ class Indicator extends StatelessWidget {
 
   Widget _loadIndicator() {
 
-    if (typeCalendar == "Order") {
-      // LogUtils.methodIn(message: typeCalendar);
-      return GetX<RepairController>(
-        builder: (_) {
-          bool isDate = false;
-          // for (var date in viewModel.allOrders) {
-          //   if ((date.startedDate!.microsecondsSinceEpoch <=
-          //       dayOfWeek.microsecondsSinceEpoch) &&
-          //       (date.endedDate!.microsecondsSinceEpoch >=
-          //           dayOfWeek.microsecondsSinceEpoch) || (checkDate(date.startedDate!, date.endedDate!, dayOfWeek)) ) {
-          //     isDate = true;
-          //     break;
-          //   }
-          //
-          //   // LogUtils.methodIn(message: "$index");
-          //   // LogUtils.methodIn(message: "${date.startedDate!.isAfter(dayOfWeek)}");
-          //   // LogUtils.methodIn(message: "${dayOfWeek.isAfter(date.endedDate!)}");
-          // }
+    if (typeCalendar == "todo") {
+      bool isDate = false;
+      for (var date in controller.allMaintenanceSchedule) {
+        if ((date.startDate!.microsecondsSinceEpoch <=
+            dayOfWeek.microsecondsSinceEpoch) &&
+            (date.dueDate!.microsecondsSinceEpoch >=
+                dayOfWeek.microsecondsSinceEpoch) || (checkDate(date.startDate!, date.dueDate!, dayOfWeek)) ) {
+          isDate = true;
+          break;
+        }
+
+        // LogUtils.methodIn(message: "$index");
+        // LogUtils.methodIn(message: "${date.startedDate!.isAfter(dayOfWeek)}");
+        // LogUtils.methodIn(message: "${dayOfWeek.isAfter(date.endedDate!)}");
+      }
 
 
-          if (isDate == true) {
-            return Container(
-              height: 4,
-              width: 4,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: AppColor.primary),
-            );
-          } else {
-            return Container();
-          }
-        },
-      );
+      if (isDate == true) {
+        return Container(
+          height: 4,
+          width: 4,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle, color: AppColor.primary),
+        );
+      } else {
+        return Container();
+      }
     }
 
     return Container();

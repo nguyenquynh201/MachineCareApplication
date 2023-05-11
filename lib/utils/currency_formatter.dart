@@ -43,6 +43,13 @@ class CurrencyFormatter {
     return formattedTimeOfDay;
   }
 
+  static String formatDateToTimeOfDay({required DateTime timeOfDay}) {
+    final localizations = MaterialLocalizations.of(
+        AppPages.navigationKey.currentContext!);
+    final formattedTimeOfDay = localizations.formatTimeOfDay(
+        TimeOfDay(hour: timeOfDay.hour, minute: timeOfDay.minute));
+    return formattedTimeOfDay;
+  }
   static TimeOfDay? parseTimeOfDay(String? value) {
     if (value == null) {
       return null;

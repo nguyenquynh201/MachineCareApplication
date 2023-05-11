@@ -11,3 +11,6 @@ export 'user_address.dart';
 export 'province_entity.dart';
 export 'district_entity.dart';
 export 'notification_data_entity.dart';
+export 'rating_entity.dart';
+export 'history_repair_entity.dart';
+export 'notification_entity.dart';

@@ -15,6 +15,9 @@ class UserEntity {
   String? lastLogin;
   Gender? gender;
   String? avatar;
+  String? addressProvince;
+  String? addressDistrict;
+  String? address;
   List<String>? deviceTokens;
   bool? resetPassword;
   List<ProductUserEntity>? listProduct;
@@ -33,22 +36,29 @@ class UserEntity {
     this.gender,
     this.deviceTokens,
     this.resetPassword,
-    this.listAddress
+    this.listAddress,
+    this.addressProvince,
+    this.addressDistrict,
+    this.address,
+    this.avatar
   });
 
   UserEntity.fromJson(Map<String, dynamic> json) {
     sId = json['_id'] as String;
-    role = json['role'] as String;
-    email = json['email'] as String;
-    fullName = json['fullName'] as String;
-    phone = json['phone'] as String;
-    username = json['username'] as String;
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    lastLogin = json['lastLogin'];
-    gender = GenderExtension.valueOf(json['gender']);
+    role = json['role'] ?? EndPoint.EMPTY_STRING;
+    email = json['email'] ?? EndPoint.EMPTY_STRING;
+    fullName = json['fullName'] ?? EndPoint.EMPTY_STRING;
+    phone = json['phone'] ?? EndPoint.EMPTY_STRING;
+    username = json['username'] ?? EndPoint.EMPTY_STRING;
+    createdAt = json['createdAt'] ?? EndPoint.EMPTY_STRING;
+    updatedAt = json['updatedAt'] ?? EndPoint.EMPTY_STRING;
+    lastLogin = json['lastLogin'] ?? EndPoint.EMPTY_STRING;
+    addressProvince = json['addressProvince'] ?? EndPoint.EMPTY_STRING;
+    addressDistrict = json['addressDistrict'] ?? EndPoint.EMPTY_STRING;
+    address = json['address'] ?? EndPoint.EMPTY_STRING;
+    gender =  json['gender'] != null ? GenderExtension.valueOf(json['gender']) : null;
     avatar = json['avatar'] != null ? "${EndPoint.baseUrl}/${json['avatar']}" : null;
-    if (json['deviceTokens'] != []) {
+    if (json['deviceTokens'] != null) {
       deviceTokens = <String>[];
       json['deviceTokens'].forEach((v) {
         deviceTokens?.add(v);
@@ -60,7 +70,7 @@ class UserEntity {
         listProduct?.add(ProductUserEntity.fromJson(v));
       });
     }
-    if (json['listAddress'] != []) {
+    if (json['listAddress'] != null) {
       listAddress = <UserAddress>[];
       json['listAddress'].forEach((v) {
         listAddress?.add(UserAddress.fromJson(v));
@@ -80,11 +90,15 @@ class UserEntity {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['lastLogin'] = lastLogin;
+    data['addressProvince'] = lastLogin;
+    data['addressDistrict'] = lastLogin;
+    data['address'] = lastLogin;
     data['gender'] = GenderExtension.genderValueOf(gender);
     if (deviceTokens != null) {
       data['deviceTokens'] = deviceTokens?.map((v) => v.toString()).toList();
     }
     data['resetPassword'] = resetPassword;
+    data['avatar'] = avatar;
     data['listProduct'] = listProduct?.map((e) => e.toJson()).toList();
     data['listAddress'] = listAddress?.map((e) => e.toJson()).toList();
     return data;

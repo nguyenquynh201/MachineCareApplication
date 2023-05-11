@@ -1,5 +1,5 @@
-import 'package:machine_care/enum/validate.dart';
-import 'package:machine_care/resources/model/model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:machine_care/resources/network_state.dart';
 import 'package:machine_care/routers/app_routes.dart';
 import 'package:machine_care/utils/app_pref.dart';
@@ -12,8 +12,10 @@ class LoginController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    AppPref.user = null;
+    AppPref.token = null;
   }
-
+  int lastClickBack = 0;
   Rx<String> phoneNumber = "".obs;
   Rx<String> password = "".obs;
   Rx<bool> obscureText = false.obs;
@@ -72,14 +74,18 @@ class LoginController extends BaseController {
         NetworkState userProfile = await appRepository.getMyProfile();
         if (userProfile.isSuccess && userProfile.data != null) {
           AppPref.user = userProfile.data;
+          if((userProfile.data as UserEntity).role == 'admin') {
+            AppUtils.showToast('login_permission'.tr);
+            return;
+          }
           print("hihi ${(userProfile.data as UserEntity).resetPassword!}");
           if (!(userProfile.data as UserEntity).resetPassword!) {
             Get.toNamed(Routes.resetPassword, arguments: userProfile.data);
           } else {
             if((userProfile.data as UserEntity).lastLogin != null) {
-              Get.toNamed(Routes.mainNavigation);
+              Get.offNamedUntil(Routes.mainNavigation , ModalRoute.withName(Routes.mainNavigation));
             }else {
-              Get.toNamed(Routes.information, arguments: userProfile.data);
+              Get.offNamedUntil(Routes.information, ModalRoute.withName(Routes.information), arguments: userProfile.data);
             }
           }
           AppUtils.showToast('login_success'.tr);

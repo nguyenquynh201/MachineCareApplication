@@ -1,12 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:machine_care/constants/app_images.dart';
-import 'package:machine_care/resources/model/banner_entity.dart';
-import 'package:machine_care/resources/model/data/data_filter.dart';
 import 'package:machine_care/resources/model/model.dart';
 import 'package:machine_care/resources/network_state.dart';
 import 'package:machine_care/ui/base/base.dart';
-import 'package:machine_care/ui/history/history.dart';
+import 'package:machine_care/ui/notification/notification.dart';
 import 'package:machine_care/ui/home/home.dart';
 import 'package:machine_care/ui/product/product_controller.dart';
 import 'package:machine_care/ui/profile/profile.dart';
@@ -18,16 +16,15 @@ class MainNavigationController extends BaseController {
   final currentPage = 0.obs;
   List<String> imagesSelectUser = [
     AppImages.iconMenuHome,
-    AppImages.iconMenuHistory,
+    AppImages.icNotification,
     AppImages.iconMenuRepair,
     AppImages.iconMenuProduct,
     AppImages.iconMenuProfile,
   ].obs;
   List<String> imagesSelectStaff = [
     AppImages.iconMenuHome,
-    AppImages.iconMenuHistory,
+    AppImages.icNotification,
     AppImages.iconMenuRepair,
-    AppImages.iconMenuProduct,
     AppImages.iconMenuProfile,
   ].obs;
   @override
@@ -37,6 +34,7 @@ class MainNavigationController extends BaseController {
         {GALogger.screenName: "H01_explore", GALogger.description: "Màn Trang chủ"});
     await getBanner();
     await getStatus();
+    await updateToken();
   }
   Future updateToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
@@ -85,7 +83,7 @@ class MainNavigationController extends BaseController {
       Get.find<HomeController>().scrollToTop();
     }
     if (index == 1) {
-      Get.find<HistoryController>().scrollToTop();
+      Get.find<NotificationController>().scrollToTop();
     }
     if (index == 2) {
       Get.find<RepairController>().scrollToTop();
@@ -102,7 +100,7 @@ class MainNavigationController extends BaseController {
       Get.find<HomeController>().scrollToTop();
     }
     if (index == 1) {
-      Get.find<HistoryController>().scrollToTop();
+      Get.find<NotificationController>().scrollToTop();
     }
     if (index == 2) {
       Get.find<RepairController>().scrollToTop();
@@ -114,7 +112,7 @@ class MainNavigationController extends BaseController {
   Map<String, String> showGALogger = {
     'H01_explore': 'Màn hình trang chủ',
     'HTR01_history': 'Màn hình lịch sử',
-    'SC01_repair_screen': 'Màn sửa chữa',
+    'SC01_notification_screen': 'Màn thông báo ',
     'SP01_product': 'Màn hình sản phẩm',
     'CA01_me': 'Trang cá nhân'
   };

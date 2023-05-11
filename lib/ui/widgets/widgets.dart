@@ -26,4 +26,8 @@ export 'widget_ui_dotted_button.dart';
 export 'widget_item_profile.dart';
 export 'widget_ui_radio_title.dart';
 export 'widget_indicator.dart';
+export 'widget_textfield.dart';
+export 'dialog/dialog.dart';
+export 'widget_empty_data.dart';
+export 'widget_person.dart';
 

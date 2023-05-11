@@ -17,6 +17,17 @@ class AddressScreen extends BaseScreen<AddressController> {
             title: 'address_book'.tr,
             isBackground: true,
           ),
+          const SizedBox(
+            height: 20,
+          ),
+          WidgetItemProfile(
+              title: 'add_address_new'.tr,
+              icon: AppImages.iconAddLocation,
+              color: AppColor.colorSupport,
+              onPress: () async {
+                final _ = await Get.toNamed(Routes.createEditAddress);
+                if (_ != null && _) {}
+              }),
           Expanded(
             child: GetX<AddressController>(
               builder: (_) {
@@ -24,10 +35,14 @@ class AddressScreen extends BaseScreen<AddressController> {
                   controller: _.refreshController,
                   onLoadMore: _.getAddress,
                   onRefresh: _.onRefresh,
+                  isNotEmpty: _.address.isNotEmpty,
                   child: _.loading.value
                       ? const WidgetLoading()
-                      : WidgetLocation(
-                          addressList: (_.address),
+                      : SingleChildScrollView(
+                          child: WidgetLocation(
+                            controller: _,
+                            addressList: (_.address),
+                          ),
                         ),
                 );
               },
@@ -40,38 +55,28 @@ class AddressScreen extends BaseScreen<AddressController> {
 }
 
 class WidgetLocation extends StatelessWidget {
-  const WidgetLocation({Key? key, required this.addressList}) : super(key: key);
+  const WidgetLocation({Key? key, required this.addressList, required this.controller})
+      : super(key: key);
   final List addressList;
+  final AddressController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListView.builder(
-            itemCount: addressList.length,
-            shrinkWrap: true,
-            itemBuilder: (_, index) {
-              UserAddress entity = addressList.elementAt(index);
-              return WidgetAddress(
-                entity: entity,
-                onPressed: () async {
-                  final _ = await Get.toNamed(Routes.createEditAddress, arguments: entity);
-                  if (_ != null && _) {}
-                },
-              );
-            }),
-        const SizedBox(
-          height: 47,
-        ),
-        WidgetItemProfile(
-            title: 'add_address_new'.tr,
-            icon: AppImages.iconAddLocation,
-            color: AppColor.colorSupport,
-            onPress: () async {
-              final _ = await Get.toNamed(Routes.createEditAddress);
-              if (_ != null && _) {}
-            }),
-      ],
-    );
+    return ListView.builder(
+        itemCount: addressList.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (_, index) {
+          UserAddress entity = addressList.elementAt(index);
+          return WidgetAddress(
+            entity: entity,
+            onPressed: () async {
+              final _ = await Get.toNamed(Routes.createEditAddress, arguments: entity);
+              if ( _ != null && _) {
+                controller.onRefresh();
+              }
+            },
+          );
+        });
   }
 }

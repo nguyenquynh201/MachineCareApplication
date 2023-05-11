@@ -46,4 +46,5 @@ class AppUtils {
       context: context,
     );
   }
+
 }

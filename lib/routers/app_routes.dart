@@ -8,5 +8,9 @@ abstract class Routes {
   static const createRepair = "/create_repair";
   static const address = "/address";
   static const createEditAddress = "/add_edit_address";
+  static const repairDetail = "/repair_detail";
+  static const repairEdit = "/repair_edit";
+  static const repairHistory = "/repair_history";
+  static const notificationDetail = "/notification_detail";
 
 }

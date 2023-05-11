@@ -143,18 +143,18 @@ class CreateRepairController extends BaseController {
         errorMachine: error.value,
         products: selected.value.productId,
         maintenanceContent: message.value,
-        startDate: starTime,
+        startDate: starTime!.toUtc(),
         target: _target.value,
         address: address.value,
+        dueDate: starTime!.toUtc(),
         status: StatusEnum.Waiting);
     try {
       NetworkState state = await appRepository.createRepair(entity: _entity);
       if (state.isSuccess && state.data != null) {
         setLoading(false);
-        Get.find<RepairController>().onRefresh();
-        Get.back();
+        Get.back(result: true);
         AppUtils.showToast("Tạo lịch sửa chữa thành công!!!");
-      }else {
+      } else {
         setLoading(false);
         AppUtils.showToast("Tạo lịch sửa chữa không công!!!");
       }

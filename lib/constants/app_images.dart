@@ -49,6 +49,8 @@ class AppImages {
   static const String iconAddLocation = '${pathSvg}ic_add_location.svg';
   static const String iconLocation = '${pathSvg}ic_location_on.svg';
   static const String iconChevronLeft = '${pathSvg}ic-chevron-left.svg';
+  static const String iconCalling = '${pathSvg}ic-calling.svg';
+  static const String iconSetting = '${pathSvg}ic-more-setting.svg';
   static const String iconMale = '${pathSvg}ic_male.svg'; /// nam
   static const String iconFemale = '${pathSvg}ic_female.svg'; /// nữ
 

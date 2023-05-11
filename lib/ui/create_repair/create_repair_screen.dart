@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:machine_care/constants/constants.dart';
 import 'package:machine_care/resources/model/product_entity.dart';
+import 'package:machine_care/ui/create_repair/widget/widget.dart';
 import 'package:machine_care/ui/ui.dart';
-import 'package:machine_care/ui/widgets/bottom_sheet/bottom_sheet_error.dart';
 import 'package:machine_care/utils/currency_formatter.dart';
 import 'package:machine_care/utils/string_utils.dart';
 
@@ -184,10 +184,10 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
                             errorMessage: StringUtils.toErrorTimeString(
                                 controller.timeValidateState.value),
                             onUpdate: (dateTime) {
-                              String towDigits(int n) => n.toString().padLeft(2, '0');
-                              String? index = towDigits(DateTime.now().minute);
-                              controller.timeOfDayStartController.text =
-                              "${DateTime.now().hour} : $index";
+                              controller.timeOfDayStartController.text =  CurrencyFormatter.formatTimeOfDay(
+                                  timeOfDay: TimeOfDay(
+                                      hour: DateTime.now().hour, minute: DateTime.now().minute));
+
                               controller.updateStartDate(dateTime);
                               controller.updateStartTimeOfDay(TimeOfDay(
                                   hour: DateTime.now().hour, minute: DateTime.now().minute));
@@ -223,8 +223,12 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
                     title: 'address'.tr, des: "(Bắt buộc)", child: _buildAddress()),
                 WidgetItemChildRepair(
                     title: 'error_other'.tr,
-                    child: _WidgetTexField(
-                      controller: controller,
+                    child: WidgetTextField(
+                      controller: controller.noteTextController,
+                      hint: 'input_text'.tr,
+                      onChanged: (value) {
+                        controller.message.value = value;
+                      },
                     )),
                 WidgetButton(
                   title: 'create_repair'.tr,
@@ -303,6 +307,7 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemCount: controller.error.length,
+
                           itemBuilder: (_, index) {
                             final entity = controller.error.elementAt(index);
                             return WidgetItemService(
@@ -625,213 +630,4 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
   }
 }
 
-class WidgetItemService extends StatelessWidget {
-  const WidgetItemService(
-      {Key? key,
-      this.url,
-      required this.title,
-      this.money,
-      this.selected = false,
-      this.onPressed,
-      this.onClean,
-      this.showIconClean = false})
-      : super(key: key);
-  final String? url;
-  final String title;
-  final String? money;
-  final bool selected;
-  final VoidCallback? onPressed;
-  final VoidCallback? onClean;
-  final bool showIconClean;
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: AppColor.white,
-                borderRadius: BorderRadius.circular(5),
-                boxShadow: [
-                  BoxShadow(
-                      color: AppColor.black.withOpacity(0.25),
-                      offset: const Offset(-1, 1),
-                      blurRadius: 11,
-                      spreadRadius: -4)
-                ],
-                border: selected
-                    ? Border.all(color: AppColor.colorFeedback, width: 1)
-                    : Border.all(color: AppColor.white)),
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, gradient: AppColor.getGradientPrimary),
-                    ),
-                    Visibility(
-                        visible: url != null,
-                        child: WidgetImageNetwork(
-                          url: url ?? "",
-                          height: 80,
-                          width: 80,
-                          fit: BoxFit.contain,
-                        )),
-                    Visibility(
-                        visible: url == null,
-                        child: const WidgetImageAsset(
-                          url: AppImages.iconMachine,
-                          height: 80,
-                          width: 80,
-                          fit: BoxFit.contain,
-                        ))
-                  ],
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  title,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.customTextStyle().copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10,
-                      color: AppColor.colorButton,
-                      fontFamily: Fonts.Quicksand.name),
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Visibility(
-                  visible: money != null,
-                  child: Text(
-                    "${CurrencyFormatter.encoded(price: money ?? "0")}đ",
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.customTextStyle().copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 8,
-                        color: AppColor.colorTitleHome,
-                        fontFamily: Fonts.Quicksand.name),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            top: 2,
-            right: 2,
-            child: Visibility(
-              visible: showIconClean,
-              child: GestureDetector(
-                onTap: onClean,
-                child: const WidgetSvg(
-                  path: AppImages.iconClean,
-                  width: 14,
-                  height: 14,
-                  fit: BoxFit.contain,
-                  color: AppColor.colorButton,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class WidgetItemChildRepair extends StatelessWidget {
-  const WidgetItemChildRepair({Key? key, required this.title, required this.child, this.des})
-      : super(key: key);
-  final String title;
-  final String? des;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          height: 5,
-        ),
-        _buildTitle(title: title, des: des),
-        const SizedBox(
-          height: 10,
-        ),
-        child,
-        const SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTitle({required String title, String? des}) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.customTextStyle().copyWith(
-              fontFamily: Fonts.Quicksand.name,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColor.black),
-        ),
-        const SizedBox(
-          width: 13,
-        ),
-        if (des != null)
-          Text(
-            des,
-            style: AppTextStyles.customTextStyle().copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColor.primary,
-                fontStyle: FontStyle.italic,
-                fontFamily: Fonts.Quicksand.name),
-          )
-      ],
-    );
-  }
-}
-
-class _WidgetTexField extends StatelessWidget {
-  final CreateRepairController controller;
-
-  const _WidgetTexField({
-    Key? key,
-    required this.controller,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: AppColor.white, borderRadius: BorderRadius.circular(8)),
-      padding: const EdgeInsets.only(left: 18, bottom: 10, right: 10),
-      child: TextField(
-        autocorrect: false,
-        enableSuggestions: false,
-        controller: controller.noteTextController,
-        maxLength: 280,
-        maxLines: 4,
-        decoration: InputDecoration(
-            hintText: 'input_text'.tr,
-            border: InputBorder.none,
-            counterStyle: AppTextStyles.medium().copyWith(color: AppColor.colorTitleHome)),
-        style: AppTextStyles.medium(),
-        onChanged: (text) {
-          controller.message.value = text;
-        },
-      ),
-    );
-  }
-}

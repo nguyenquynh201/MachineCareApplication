@@ -49,8 +49,8 @@ class WidgetHeader extends StatelessWidget {
           ? BoxDecoration(gradient: gradient)
           : BoxDecoration(color: color ?? AppColor.white),
       child: Stack(
-        fit: StackFit.expand,
-        clipBehavior: Clip.none,
+        // fit: StackFit.expand,
+        // clipBehavior: Clip.none,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -65,6 +65,7 @@ class WidgetHeader extends StatelessWidget {
                   alignment: centerTitle ? Alignment.center : Alignment.centerLeft,
                   child: widgetTitle ??
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildTitle(titleColor),
                           Visibility(
@@ -78,20 +79,20 @@ class WidgetHeader extends StatelessWidget {
               ...(actions ?? [])
             ],
           ),
-          Visibility(
-              visible: isBackground,
-              child: const Positioned(
-                  right: -80,
-                  top: -140,
-                  child: Opacity(
-                    opacity: 0.5,
-                    child: WidgetImageAsset(
-                      url: AppImages.icCoffeBg,
-                      fit: BoxFit.contain,
-                      height: 195,
-                      width: 195,
-                    ),
-                  )))
+          // Visibility(
+          //     visible: isBackground,
+          //     child: const Positioned(
+          //         right: -80,
+          //         top: -140,
+          //         child: Opacity(
+          //           opacity: 0.5,
+          //           child: WidgetImageAsset(
+          //             url: AppImages.icCoffeBg,
+          //             fit: BoxFit.contain,
+          //             height: 195,
+          //             width: 195,
+          //           ),
+          //         )))
         ],
       ),
     );

@@ -143,8 +143,7 @@ class CreateEditAddressController extends BaseController {
       if(state.isSuccess && state.data != null) {
         setLoading(false);
         AppUtils.showToast("Tạo địa chỉ thành công");
-        Get.back();
-
+        Get.back(result: true);
       }else {
         setLoading(false);
         AppUtils.showToast("Lỗi gì đó");

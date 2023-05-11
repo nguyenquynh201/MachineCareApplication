@@ -74,8 +74,7 @@ class _WidgetLoadMoreRefreshState extends State<WidgetLoadMoreRefresh> {
   }
 
   Widget _buildIsEmpty() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return ListView(
       children: [
         Center(
             child: WidgetEmpty(

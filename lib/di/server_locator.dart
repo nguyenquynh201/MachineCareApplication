@@ -12,7 +12,8 @@ Future<void> setupLocator() async {
     return AppRepository(
       authRepository: AuthRepository(appClients, path),
       productRepository: ProductRepository(appClients , path),
-      maintenanceScheduleRepository: MaintenanceScheduleRepository(appClients , path)
+      maintenanceScheduleRepository: MaintenanceScheduleRepository(appClients , path),
+      notificationRepository: NotificationRepository(appClients , path)
     );
   });
 
