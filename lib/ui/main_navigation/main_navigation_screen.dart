@@ -74,10 +74,10 @@ class MainNavigationScreen extends BaseScreen<MainNavigationController> {
                   child: (AppPref.user.sId != null && AppPref.user.role == 'staff')
                       ? Row(
                           children: [
-                            _TabView(index: 0, title: tabsUser[0], controller: controller),
-                            _TabView(index: 1, title: tabsUser[1], controller: controller),
-                            _TabView(index: 2, title: tabsUser[2], controller: controller),
-                            _TabView(index: 3, title: tabsUser[3], controller: controller),
+                            _TabView(index: 0, title: tabsStaff[0], controller: controller),
+                            _TabView(index: 1, title: tabsStaff[1], controller: controller),
+                            _TabView(index: 2, title: tabsStaff[2], controller: controller),
+                            _TabView(index: 3, title: tabsStaff[3], controller: controller),
                           ],
                         )
                       : Row(

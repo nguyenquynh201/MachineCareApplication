@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
@@ -14,29 +15,39 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
   @override
   Widget build(BuildContext context) {
     return WidgetLoadingFullScreen<RepairDetailController>(
-        child: Scaffold(
-      backgroundColor: AppColor.colorBanner,
-      body: Column(
-        children: [
-          WidgetHeader(
-            title: 'repair_detail'.tr,
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  print("nè nè");
-                  _buildMoreSetting(isStatus: controller.entity.value.status == StatusEnum.Waiting);
-                },
-                child: const WidgetSvg(
-                  path: AppImages.iconSetting,
-                  height: 4,
-                  fit: BoxFit.contain,
+        child: GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.colorBanner,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                WidgetHeader(
+                  title: 'repair_detail'.tr,
+                  actions: [
+                    GestureDetector(
+                      onTap: () {
+                        _buildMoreSetting(
+                            isStatus: controller.entity.value.status == StatusEnum.Waiting);
+                      },
+                      child: const WidgetSvg(
+                        path: AppImages.iconSetting,
+                        height: 4,
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  ],
+                  isBackground: true,
                 ),
-              )
-            ],
-            isBackground: true,
-          ),
-          Expanded(child: _buildBody())
-        ],
+                Expanded(child: _buildBody())
+              ],
+            ),
+            _buildContentComment(),
+          ],
+        ),
       ),
     ));
   }
@@ -49,17 +60,249 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
               children: [
                 _buildTitle(title: 'information'.tr),
                 _buildRepairInfo(entity: controller.entity.value),
+                Visibility(visible: controller.bugEntity.isNotEmpty,child: _buildBug()),
                 _buildAddress(controller.entity.value.address),
                 _buildProduct(entity: controller.entity.value.products),
                 _buildError(entities: controller.entity.value.errorMachine),
                 _buildStaff(entity: controller.entity.value.relateStaffs),
                 Visibility(
                     visible: controller.entity.value.status == StatusEnum.Done,
-                    child: _buildRating(entity: controller.ratingEntity.value))
+                    child: _buildRating(entity: controller.ratingEntity.value)),
+                _buildComment()
               ],
             ),
           ),
         ));
+  }
+  Widget _buildBug() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTitle(title: 'bug_other'.tr),
+        _buildItemBug()
+      ],
+    );
+  }
+  Widget _buildItemBug() {
+    return Obx(
+      () => Container(
+          margin: const EdgeInsets.only(top: 10, bottom: 10),
+          padding: const EdgeInsets.only(top: 15, bottom: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: AppColor.white,
+          ),
+          child: Column(
+            children: [
+              ...List.generate(controller.bugEntity.length, (index) {
+                final entity = controller.bugEntity.elementAt(index);
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(left: 10 , right: 10 , top: 10 , bottom: 10),
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                      color: AppColor.colorBanner, borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${'name_bug'.tr}: ${entity.nameBug}",
+                        style: AppTextStyles.customTextStyle().copyWith(
+                          fontFamily: Fonts.Quicksand.name,
+                          fontSize: 18,
+                          color: AppColor.colorButton,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4,),
+                      Text(
+                        "${'price_bug'.tr}: ${CurrencyFormatter.encoded(price: entity.priceBug.toString())} VND",
+                        style: AppTextStyles.customTextStyle().copyWith(
+                          fontFamily: Fonts.Quicksand.name,
+                          fontSize: 14,
+                          color: AppColor.borderError,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+              Visibility(
+                visible: controller.entity.value.status != StatusEnum.Done,
+                child: _buildAddButton(() {
+                  Get.bottomSheet(BottomSheetBug(
+                    updateBug: (entity) {
+                      controller.updateBug(entity: entity);
+                    },
+                  ),
+                      backgroundColor: AppColor.white,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                      enterBottomSheetDuration: const Duration(milliseconds: 500),
+                      barrierColor: Colors.black.withOpacity(0.3));
+                }),
+              )
+            ],
+          )),
+    );
+  }
+
+  Widget _buildAddButton(VoidCallback onPressed) {
+    return Material(
+      color: AppColor.white,
+      borderRadius: BorderRadius.circular(5),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
+          decoration: BoxDecoration(
+              color: AppColor.colorBanner,
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: AppColor.colorTitleHome, width: 1)),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 30,
+                height: 30,
+                child: UIDottedButton(
+                  borderType: BorderType.RRect,
+                  strokeWidth: 1,
+                  radius: const Radius.circular(8),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const WidgetSvg(
+                      path: AppImages.iconPlus,
+                      fit: BoxFit.contain,
+                      width: 16,
+                      height: 16,
+                      color: AppColor.colorTitleHome,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FittedBox(
+                  child: Text(
+                    'add_bug_other'.tr,
+                    style: AppTextStyles.customTextStyle().copyWith(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: AppColor.colorTitleHome,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComment() {
+    return Obx(() => Container(
+          margin: const EdgeInsets.only(top: 16),
+          padding: const EdgeInsets.only(
+            top: 17,
+            bottom: 17,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitle(title: 'comment'.tr),
+              const SizedBox(
+                height: 16,
+              ),
+              Visibility(visible: controller.comments.isNotEmpty, child: _buildListComment()),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildContentComment() {
+    return Obx(() => Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+            decoration: const BoxDecoration(color: AppColor.white),
+            child: Row(
+              children: [
+                WidgetThumbnail(url: AppPref.user.avatar),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: _buildInput(
+                      hint: 'postComment'.tr,
+                      controller: controller.commentController.value,
+                      onFocus: controller.onFocusContent,
+                      onChanged: controller.onChangedContent,
+                      iconRight: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: controller.comment.value.isNotEmpty
+                              ? _buildIconComment(color: AppColor.colorSupport)
+                              : _buildIconComment(color: AppColor.lineColor)),
+                      onRightIconPressed: () {
+                        if (controller.comment.value.isNotEmpty) {
+                          FocusScope.of(Get.context!).unfocus();
+                          controller.addComment();
+                          controller.comment.value = "";
+                          controller.commentController.value.clear();
+                        }
+                      }),
+                )
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildIconComment({required Color color}) {
+    return SizedBox(
+      width: 35,
+      height: 35,
+      child: Center(
+        child: WidgetSvg(
+          path: AppImages.iconSend,
+          fit: BoxFit.contain,
+          color: color,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListComment() {
+    return GetX<RepairDetailController>(builder: (_) {
+      return ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(bottom: 40),
+          itemBuilder: (context, index) {
+            if (_.comments.isEmpty) {
+              return Container();
+            } else {
+              return WidgetComment(
+                  comment: _.comments.elementAt(index), controller: controller, index: index);
+            }
+          },
+          separatorBuilder: (_, index) {
+            return const Divider(
+              thickness: 1,
+              color: AppColor.lineColor,
+            );
+          },
+          itemCount: _.comments.length);
+    });
   }
 
   Widget _buildStaff({List<UserEntity>? entity}) {
@@ -74,27 +317,21 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
       margin: const EdgeInsets.only(top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTitle(title: 'staff'.tr),
-          WidgetPerson(entity: entity, onPressed: () {
-
-          })
-        ],
+        children: [_buildTitle(title: 'staff'.tr), WidgetPerson(entity: entity, onPressed: () {})],
       ),
     );
   }
-
-
 
   Widget _buildRating({RatingEntity? entity}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Visibility(
-            visible: entity != null,
+            visible: entity?.id != null,
             child: _buildIsNotEmptyRating(entity: entity ?? RatingEntity())),
         Visibility(
-            visible: (entity == null && AppPref.user.role != null && AppPref.user.role == "user"),
+            visible:
+                (entity?.id == null && AppPref.user.role != null && AppPref.user.role == "user"),
             child: _buildIsEmptyRating())
       ],
     );
@@ -278,23 +515,44 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
   }
 
   Widget _buildStatus({required MaintenanceScheduleEntity entity}) {
-    return Container(
-      margin: const EdgeInsets.only(top: 16),
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: AppColor.white,
-      ),
-      child: Center(
-        child: _buildInfoSelect(
-          title: 'status'.tr,
-          info: entity.status ?? StatusEnum.Waiting,
-        ),
-      ),
-    );
+    return ValueListenableBuilder(
+        valueListenable: controller.status,
+        builder: (_, status, __) {
+          return Container(
+            margin: const EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: AppColor.white,
+            ),
+            child: Center(
+              child: _buildInfoSelect(
+                  title: 'status'.tr,
+                  info: status,
+                  onPressed: () {
+                    Get.bottomSheet(
+                        BottomSheetStatus(
+                            onUpdate: (value) {
+                              if (value == status) {
+                                return;
+                              } else {
+                                controller.updateComment(status: value);
+                              }
+                            },
+                            status: status),
+                        backgroundColor: AppColor.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                        enterBottomSheetDuration: const Duration(milliseconds: 500),
+                        barrierColor: Colors.black.withOpacity(0.3));
+                  }),
+            ),
+          );
+        });
   }
 
   Widget _buildDateTime({
@@ -364,27 +622,52 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
     );
   }
 
-  Widget _buildInfoSelect({required String title, required StatusEnum info}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildTitleInput(title: title),
-          Container(
-            constraints: const BoxConstraints(maxWidth: 250),
-            child: Text(
-              StringUtils.statusValueOf(info),
-              style: AppTextStyles.customTextStyle().copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: StringUtils.statusTypeColor(info),
-                  fontFamily: Fonts.Quicksand.name),
-            ),
-          )
-        ],
+  Widget _buildInfoSelect(
+      {required String title, required StatusEnum info, VoidCallback? onPressed}) {
+    bool isRole = AppPref.user.role != null &&
+        AppPref.user.role == 'staff' &&
+        !(info == StatusEnum.Done || info == StatusEnum.Cancel);
+    return GestureDetector(
+      onTap: () {
+        if (isRole) {
+          onPressed?.call();
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(child: _buildTitleInput(title: title)),
+            Row(
+              children: [
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 250),
+                  child: Text(
+                    StringUtils.statusValueOf(info),
+                    style: AppTextStyles.customTextStyle().copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: StringUtils.statusTypeColor(info),
+                        fontFamily: Fonts.Quicksand.name),
+                  ),
+                ),
+                Visibility(
+                  visible: isRole,
+                  child: const WidgetSvg(
+                    path: AppImages.icNext,
+                    color: AppColor.description,
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.contain,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -443,7 +726,7 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
     );
   }
 
-  Widget  _buildTitleInput({required String title, String? focus}) {
+  Widget _buildTitleInput({required String title, String? focus}) {
     return Row(
       children: [
         Text(
@@ -502,5 +785,27 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
                 BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
         enterBottomSheetDuration: const Duration(milliseconds: 500),
         barrierColor: Colors.black.withOpacity(0.3));
+  }
+
+  Widget _buildInput({
+    required TextEditingController controller,
+    String? errorMessage,
+    String? hint,
+    Function(String)? onChanged,
+    Function()? onFocus,
+    TextInputType textInputType = TextInputType.text,
+    VoidCallback? onRightIconPressed,
+    Widget? iconRight,
+  }) {
+    return UIInputComment(
+      controller: controller,
+      errorMessage: errorMessage,
+      onChanged: onChanged,
+      onFocus: onFocus,
+      hint: hint,
+      keyboardType: textInputType,
+      onRightIconPressed: onRightIconPressed,
+      iconRight: iconRight,
+    );
   }
 }

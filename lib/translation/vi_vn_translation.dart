@@ -54,6 +54,7 @@ final Map<String, String> viVN = {
   'hint_phone' : "0978xxx1234",
   'male' : 'Nam',
   'female' : 'Nữ',
+  'other' : 'Khác',
   'province': 'Tỉnh/ Thành phố',
   'district': 'Quận/ Huyện',
   'notFoundProvince': 'Không tìm thấy tỉnh/ thành phố',
@@ -128,5 +129,20 @@ final Map<String, String> viVN = {
   'update_fail' : 'Cập nhật không thành công',
   'title_confirm_dialog' : 'Bạn có chắc chắn muốn nhận lịch này không???',
   'title_no_confirm_dialog' : 'Bạn có chắc chắn muốn huỷ lịch này không???',
+  'take_photo' : 'Chụp ảnh',
+  'photo_from_lib' : 'Chọn ảnh từ thư viện',
+  'update_info' : 'Cập nhật thông tin',
+  'birth' : 'Ngày sinh',
+  'comment' : 'Bình luận',
+  'postComment' : 'Viết bình luận',
+  'replys' : 'Trả lời',
+  'comment_success' : 'Bình luận thành công',
+  'comment_fail' : 'Bình luận không thành công',
+  'bug_other' : 'Lỗi phát sinh',
+  'add_bug_other' : 'Thêm lỗi phát sinh',
+  'name_bug' : 'Tên lỗi',
+  'price_bug' : 'Chi phí',
+  'apply' : 'Áp dụng',
+  'isEmpty' : 'Vui lòng không bỏ trống bất kì trường nào!!!'
 
 };

@@ -6,6 +6,7 @@ import 'package:machine_care/resources/provider/app_client.dart';
 import 'package:machine_care/services/service.dart';
 import 'package:machine_care/utils/utils.dart';
 
+import '../../enum/validate.dart';
 import '../model/model.dart';
 
 class MaintenanceScheduleRepository {
@@ -139,8 +140,9 @@ class MaintenanceScheduleRepository {
       return NetworkState.withError(e);
     }
   }
+
   Future<NetworkState<MaintenanceScheduleEntity>> updateRepair(
-      { required String id,required MaintenanceScheduleEntity entity}) async {
+      { required String id, required MaintenanceScheduleEntity entity}) async {
     bool isDisconnect = await WifiService.isDisconnect();
     if (isDisconnect) return NetworkState.withDisconnect();
     try {
@@ -254,6 +256,7 @@ class MaintenanceScheduleRepository {
       return NetworkState.withError(e);
     }
   }
+
   Future<NetworkState<RatingEntity>> updateRating({required RatingEntity entity}) async {
     bool isDisconnect = await WifiService.isDisconnect();
     if (isDisconnect) return NetworkState.withDisconnect();
@@ -267,6 +270,7 @@ class MaintenanceScheduleRepository {
       return NetworkState.withError(e);
     }
   }
+
   Future<NetworkState<List<HistoryRepairEntity>>> getHistory({required String id}) async {
     bool isDisconnect = await WifiService.isDisconnect();
     if (isDisconnect) return NetworkState.withDisconnect();
@@ -289,4 +293,79 @@ class MaintenanceScheduleRepository {
       return NetworkState.withError(e);
     }
   }
+
+  Future<NetworkState<List<CommentEntity>>> getComment({required String id}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      final Options options = Options(
+        headers: {
+          "Authorization": "Bearer ${AppPref.token.accessToken}",
+          'content-Type': 'application/json'
+        },
+      );
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      String api = "${endPoint.maintenanceSchedule}s/comment?idMaintenance=$id";
+      Response response = await appClients.get(api, options: options);
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(
+          status: EndPoint.success,
+          response: CommentEntity.listFromJson(response.data['data']),
+          total: response.data['total']);
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
+
+  Future<NetworkState<dynamic>> updateStatus(
+      {required StatusEnum status, required String id}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      Map<String, dynamic> param = {
+        'status': status.name.toLowerCase()
+      };
+      String api = "${endPoint.maintenanceSchedule}/$id/updateStatus";
+      Response response = await appClients.put(api, data: param);
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(status: EndPoint.success, response:response.data);
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
+  Future<NetworkState<dynamic>> updateBug(
+      {required List<BugEntity> entity , required String id}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      Map<String, dynamic> param = {
+        "bugs":  entity.map((v) => v.toJson()).toList(),
+      };
+      String api = "${endPoint.maintenanceSchedule}/$id/updateBug";
+      Response response = await appClients.put(api, data: param);
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(status: EndPoint.success, response:response.data);
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
+
+  Future<NetworkState<CommentEntity>> addComment(
+      {required CommentEntity entity}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+
+      String api = "${endPoint.maintenanceSchedule}s/comment";
+      Response response = await appClients.post(api, data: entity.toJson());
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(status: EndPoint.success, response:CommentEntity.fromJson(response.data));
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
+
 }

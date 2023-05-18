@@ -28,6 +28,7 @@ class WidgetItemRepair extends StatelessWidget {
               color: AppColor.colorBgProfile,
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,14 +51,16 @@ class WidgetItemRepair extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     if (entity.totalMoney != null)
                       _buildTotalMoney(
                         totalMoney:
                         CurrencyFormatter.encoded(price: entity.totalMoney.toString()),
                       ),
+                    const SizedBox(width: 10,),
                     if (entity.status != null) _buildStatus(entity: entity.status),
                   ],
                 )

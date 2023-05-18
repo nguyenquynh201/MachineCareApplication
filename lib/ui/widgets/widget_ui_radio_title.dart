@@ -25,7 +25,6 @@ class UIRadioTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: AppColor.primary , width: 1)

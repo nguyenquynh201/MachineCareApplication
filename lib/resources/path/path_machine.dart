@@ -51,7 +51,7 @@ class PathMachine extends AppPath{
 
   @override
   // TODO: implement maintenanceScheduleHistory
-  String get maintenanceScheduleHistory => "$baseUrl/maintenance-schedule-notification";
+  String get maintenanceScheduleHistory => "$baseUrl/maintenance-schedule-history";
 
   @override
   // TODO: implement notification

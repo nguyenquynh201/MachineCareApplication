@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:machine_care/constants/constants.dart';
 import 'package:machine_care/resources/model/model.dart';
 import 'package:machine_care/resources/network_state.dart';
 import 'package:machine_care/utils/utils.dart';
+import '../../ui/ui.dart';
 import 'repository.dart';
 
 class AppRepository {
@@ -121,8 +125,29 @@ class AppRepository {
   Future<NetworkState<dynamic>> updateRequestReceived({required String id , required String idAdmin , required Map<String , dynamic> data}) async {
     return notificationRepository.updateRequestReceived(id: id, idAdmin: idAdmin, data: data);
   }
+  Future<NetworkState<dynamic>> uploadImage({required String idUser, required File file}) async {
+    return authRepository.uploadImage(idUser: idUser, file: file);
+  }
 
+  Future<NetworkState<UserEntity>> updateInfo({required String id , required UserEntity entity}) async {
+    return authRepository.updateInfo(id: id, entity: entity);
+  }
+  Future<NetworkState<List<CommentEntity>>> getComment({required String id}) async {
+    return maintenanceScheduleRepository.getComment(id: id);
+  }
 
+  Future<NetworkState<dynamic>> updateStatus(
+      {required StatusEnum status, required String id}) async {
+    return maintenanceScheduleRepository.updateStatus(status: status, id: id);
+  }
+  Future<NetworkState<CommentEntity>> addComment(
+      {required CommentEntity entity}) async {
+    return maintenanceScheduleRepository.addComment(entity: entity);
+  }
+  Future<NetworkState<dynamic>> updateBug(
+      {required List<BugEntity> entity , required String id}) async {
+    return maintenanceScheduleRepository.updateBug(entity: entity , id: id);
+  }
     Future<bool> isUserLoggedIn() async {
     try {
       if (AppPref.token.accessToken == null || AppPref.token.accessToken!.isEmpty) return false;

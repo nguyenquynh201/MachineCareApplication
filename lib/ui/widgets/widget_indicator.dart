@@ -41,7 +41,7 @@ class Indicator extends StatelessWidget {
           height: 4,
           width: 4,
           decoration: const BoxDecoration(
-              shape: BoxShape.circle, color: AppColor.primary),
+              shape: BoxShape.circle, color: AppColor.colorButton),
         );
       } else {
         return Container();

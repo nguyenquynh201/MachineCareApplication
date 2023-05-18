@@ -23,6 +23,7 @@ class AppColor {
   static const Color textGray = Color(0xFF8D8D8D);
   static const Color colorCheckBox = Color(0xFF2DEA40);
   static const Color colorEdit = Color(0xFF5E5E5E);
+  static const Color colorPlaceHolderRecording = Color(0xFFF1F1F1);
 
 
   static LinearGradient get getGradientPrimary {

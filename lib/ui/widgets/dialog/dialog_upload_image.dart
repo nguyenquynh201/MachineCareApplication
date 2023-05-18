@@ -31,10 +31,11 @@ class DialogUploadImage extends StatelessWidget {
       if (isNative != null && isNative!) {
         Get.back(result: File(image.path));
       } else {
-        final f = await _cropImage(image.path);
-        if (f != null) {
-          Get.back(result: File(f.path));
-        }
+        Get.back(result: File(image.path));
+        // final f = await _cropImage(image.path);
+        // if (f != null) {
+        //
+        // }
       }
     }
   }
@@ -109,7 +110,7 @@ class DialogUploadImage extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Get.back(),
                   child: Text(
-                    'cancel'.tr,
+                    'close'.tr,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.medium().copyWith(color: const Color(0xFFB7B7B7)),
                   ),

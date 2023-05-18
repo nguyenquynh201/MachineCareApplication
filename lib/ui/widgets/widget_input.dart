@@ -22,7 +22,9 @@ class WidgetInput extends StatelessWidget {
       this.onSubmitted,
       this.typeInput = TypeInput.none,
       this.iconRight,
-      this.isReasonable = false , this.enable = true})
+      this.isReasonable = false,
+      this.enable = true,
+      this.bgColor})
       : super(key: key);
   final String? hint;
   final String? errorMessage;
@@ -38,6 +40,7 @@ class WidgetInput extends StatelessWidget {
   final bool isReasonable;
   final Widget? iconRight;
   final bool enable;
+  final Color? bgColor;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +50,7 @@ class WidgetInput extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
+            color: !enable ? (bgColor ?? AppColor.colorBanner) : Colors.transparent,
             border: Border.all(
               color: (errorMessage == null || errorMessage!.isEmpty)
                   ? AppColor.primary

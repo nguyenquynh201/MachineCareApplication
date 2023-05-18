@@ -51,7 +51,7 @@ class WidgetAvatar extends StatelessWidget {
                 url: url ?? "",
                 width: radius * 2,
                 height: radius * 2,
-                fit: BoxFit.fill,
+                fit: BoxFit.contain,
                 placeHolderType: placeHolderType,
               ),
             ))
