@@ -15,10 +15,13 @@ class RepairDetailController extends BaseController {
     }
   }
 
+  ValueNotifier<StatusEnum> status = ValueNotifier<StatusEnum>(StatusEnum.Waiting);
   Rx<MaintenanceScheduleEntity> entity = MaintenanceScheduleEntity().obs;
+  RxList<BugEntity> bugEntity = <BugEntity>[].obs;
   RxDouble rating = 3.0.obs;
   RxString comment = "".obs;
   TextEditingController commentRatingController = TextEditingController();
+  Rx<TextEditingController> commentController = TextEditingController().obs;
   Rx<RatingEntity> ratingEntity = RatingEntity().obs;
 
   void updateRating(double value) {
@@ -30,15 +33,29 @@ class RepairDetailController extends BaseController {
     NetworkState state = await appRepository.getMaintenanceScheduleById(id: id);
     if (state.isSuccess && state.data != null) {
       entity.value = state.data as MaintenanceScheduleEntity;
-      List<RatingEntity>  ratings= entity.value.rating ?? [];
-      if(ratings.isNotEmpty) {
+      status.value = entity.value.status ?? StatusEnum.Waiting;
+      bugEntity.value = entity.value.bugs;
+      List<RatingEntity> ratings = entity.value.rating;
+      if (ratings.isNotEmpty) {
         ratingEntity.value = ratings.elementAt(0);
-      print("nè nè ${ratingEntity.value}");
       }
+      await getComment(id: id);
     } else {
       AppUtils.showToast('load_api_fail'.tr);
     }
     setLoading(false);
+  }
+
+  void updateBug({required BugEntity entity}) async {
+    bugEntity.insert(0, entity);
+    this.entity.value.totalMoney = this.entity.value.totalMoney! + entity.priceBug!;
+    NetworkState state =
+        await appRepository.updateBug(entity: bugEntity.value, id: this.entity.value.sId!);
+    if (state.isSuccess && state.data != null) {
+      AppUtils.showToast('update_success'.tr);
+    } else {
+      AppUtils.showToast('update_fail'.tr);
+    }
   }
 
   void feedBackRating() async {
@@ -51,10 +68,10 @@ class RepairDetailController extends BaseController {
       setLoading(true);
       NetworkState state = await appRepository.updateRating(entity: entity);
       if (state.isSuccess && state.data != null) {
-        ratingEntity?.value = state.data as RatingEntity;
+        ratingEntity.value = state.data as RatingEntity;
         setLoading(false);
         AppUtils.showToast('rating_success'.tr);
-      }else {
+      } else {
         setLoading(false);
         AppUtils.showToast('rating_fail'.tr);
       }
@@ -66,5 +83,52 @@ class RepairDetailController extends BaseController {
 
   Rx<bool> get enable {
     return (comment.isNotEmpty && rating.value != 0).obs;
+  }
+
+  void onChangedContent(String value) {
+    comment.value = value;
+  }
+
+  ValidateState contentState = ValidateState.none;
+
+  void onFocusContent() {
+    contentState = ValidateState.none;
+  }
+
+  RxList<CommentEntity> comments = <CommentEntity>[].obs;
+
+  Future getComment({required String id}) async {
+    NetworkState state = await appRepository.getComment(id: id);
+    if (state.isSuccess && state.data != null) {
+      comments.value = state.data as List<CommentEntity>;
+      comments.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+    } else {
+      setLoading(false);
+    }
+  }
+
+  void updateComment({required StatusEnum status}) async {
+    if (entity.value.sId != null) {
+      NetworkState state = await appRepository.updateStatus(status: status, id: entity.value.sId!);
+      if (state.isSuccess && state.data != null) {
+        this.status.value = status;
+        Get.find<RepairController>().onRefresh();
+        AppUtils.showToast('update_success'.tr);
+      } else {
+        AppUtils.showToast('update_fail'.tr);
+      }
+    }
+  }
+
+  void addComment() async {
+    CommentEntity commentEntity =
+        CommentEntity(id: '', maintenance: entity.value.sId, contentComment: comment.value);
+    NetworkState data = await appRepository.addComment(entity: commentEntity);
+    if (data.isSuccess && data.data != null) {
+      comments.insert(0, (data.data as CommentEntity));
+      AppUtils.showToast('comment_success'.tr);
+    } else {
+      AppUtils.showToast('comment_fail'.tr);
+    }
   }
 }

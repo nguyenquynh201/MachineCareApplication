@@ -22,38 +22,30 @@ class WidgetHeaderHome extends StatelessWidget {
             const SizedBox(
               width: 11,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "HI , ${user.fullName}",
-                  style: AppTextStyles.customTextStyle().copyWith(
-                      fontSize: 10,
-                      color: AppColor.colorButton,
-                      fontFamily: 'Quicksand',
-                      fontWeight: FontWeight.w400),
-                ),
-                Text(
-                  "welcome".tr,
-                  style: AppTextStyles.customTextStyle().copyWith(
-                      fontSize: 12,
-                      color: AppColor.colorButton,
-                      fontFamily: 'Quicksand',
-                      fontWeight: FontWeight.w600),
-                )
-              ],
-            ),
-            const Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: WidgetSvg(
-                    path: AppImages.icNotification,
-                    height: 27,
-                    width: 24,
-                    fit: BoxFit.contain,
-                    color: AppColor.colorButton,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "HI , ${user.fullName}",
+                    style: AppTextStyles.customTextStyle().copyWith(
+                        fontSize: 10,
+                        color: AppColor.colorButton,
+                        fontFamily: 'Quicksand',
+                        fontWeight: FontWeight.w400),
                   ),
-                ))
+                  Text(
+                    "welcome".tr,
+                    style: AppTextStyles.customTextStyle().copyWith(
+                        fontSize: 12,
+                        color: AppColor.colorButton,
+                        fontFamily: 'Quicksand',
+                        fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            ),
+         
           ],
         ),
       ),

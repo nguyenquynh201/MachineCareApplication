@@ -18,30 +18,32 @@ class UserEntity {
   String? addressProvince;
   String? addressDistrict;
   String? address;
+  String? birthday;
   List<String>? deviceTokens;
   bool? resetPassword;
   List<ProductUserEntity>? listProduct;
   List<UserAddress>? listAddress;
 
-  UserEntity({
-    this.sId,
-    this.role,
-    this.email,
-    this.fullName,
-    this.phone,
-    this.username,
-    this.createdAt,
-    this.updatedAt,
-    this.lastLogin,
-    this.gender,
-    this.deviceTokens,
-    this.resetPassword,
-    this.listAddress,
-    this.addressProvince,
-    this.addressDistrict,
-    this.address,
-    this.avatar
-  });
+  UserEntity(
+      {this.sId,
+      this.role,
+      this.email,
+      this.fullName,
+      this.phone,
+      this.username,
+      this.createdAt,
+      this.updatedAt,
+      this.lastLogin,
+      this.gender,
+      this.deviceTokens,
+      this.resetPassword,
+      this.listAddress,
+      this.addressProvince,
+      this.addressDistrict,
+      this.address,
+      this.avatar,
+        this.birthday = EndPoint.EMPTY_STRING,
+      });
 
   UserEntity.fromJson(Map<String, dynamic> json) {
     sId = json['_id'] as String;
@@ -53,11 +55,19 @@ class UserEntity {
     createdAt = json['createdAt'] ?? EndPoint.EMPTY_STRING;
     updatedAt = json['updatedAt'] ?? EndPoint.EMPTY_STRING;
     lastLogin = json['lastLogin'] ?? EndPoint.EMPTY_STRING;
+    birthday = json['birth'];
     addressProvince = json['addressProvince'] ?? EndPoint.EMPTY_STRING;
     addressDistrict = json['addressDistrict'] ?? EndPoint.EMPTY_STRING;
     address = json['address'] ?? EndPoint.EMPTY_STRING;
-    gender =  json['gender'] != null ? GenderExtension.valueOf(json['gender']) : null;
-    avatar = json['avatar'] != null ? "${EndPoint.baseUrl}/${json['avatar']}" : null;
+    gender = json['gender'] != null ? GenderExtension.valueOf(json['gender']) : null;
+    if(json['avatar'] != null) {
+      if(json['avatar'].contains('http://') || json['avatar'].contains('https://')) {
+        avatar = "${json['avatar']}" ;
+      }else {
+        avatar = "${EndPoint.baseUrl}/${json['avatar']}";
+      }
+    }else {
+    }
     if (json['deviceTokens'] != null) {
       deviceTokens = <String>[];
       json['deviceTokens'].forEach((v) {
@@ -90,9 +100,11 @@ class UserEntity {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['lastLogin'] = lastLogin;
-    data['addressProvince'] = lastLogin;
-    data['addressDistrict'] = lastLogin;
-    data['address'] = lastLogin;
+    data['addressProvince'] = addressProvince;
+    data['addressDistrict'] = addressDistrict;
+    data['address'] = address;
+    data['birth'] = birthday.toString();
+
     data['gender'] = GenderExtension.genderValueOf(gender);
     if (deviceTokens != null) {
       data['deviceTokens'] = deviceTokens?.map((v) => v.toString()).toList();
@@ -102,6 +114,18 @@ class UserEntity {
     data['listProduct'] = listProduct?.map((e) => e.toJson()).toList();
     data['listAddress'] = listAddress?.map((e) => e.toJson()).toList();
     return data;
+  }
+
+  Map<String, dynamic> toJonUpdate() {
+    return {
+      'fullName': fullName,
+      'phone': phone,
+      'gender': GenderExtension.genderValueOf(gender),
+      'addressProvince': addressProvince,
+      'addressDistrict': addressDistrict,
+      'address': address,
+      "birth": birthday.toString(),
+    };
   }
 }
 

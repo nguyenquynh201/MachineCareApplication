@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:machine_care/constants/constants.dart';
 import 'package:machine_care/resources/model/model.dart';
 import 'package:machine_care/resources/network_state.dart';
@@ -117,6 +119,48 @@ class AuthRepository {
       Response response = await appClients.post(api, data: data);
       AppUtils.logMessage("response${response.data}");
       return NetworkState(status: EndPoint.success, response: response.data);
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
+
+  Future<NetworkState<dynamic>> uploadImage({required String idUser, required File file}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      FormData formData = FormData.fromMap({
+        "file": [MultipartFile.fromFileSync(file.path)]
+      });
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      String api = "${endPoint.user}/$idUser/avatars";
+      Response response = await appClients.post(
+        api,
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer ${AppPref.token.accessToken}'
+          },
+        ),
+      );
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(status: EndPoint.success, response: response.data);
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
+  Future<NetworkState<UserEntity>> updateInfo({
+    required String id,
+    required UserEntity entity
+  }) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      String api = "${endPoint.user}/$id";
+      Response response = await appClients.put(api, data: entity.toJonUpdate());
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(status: EndPoint.success, response: UserEntity.fromJson(response.data));
     } on DioError catch (e) {
       return NetworkState.withError(e);
     }

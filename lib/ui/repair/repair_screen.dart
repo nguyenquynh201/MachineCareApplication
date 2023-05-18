@@ -105,7 +105,7 @@ class RepairScreen extends BaseScreen<RepairController> {
             headerVisible: false,
             calendarStyle: const CalendarStyle(
                 isTodayHighlighted: false,
-                selectedDecoration: BoxDecoration(color: AppColor.primary, shape: BoxShape.circle)),
+                selectedDecoration: BoxDecoration(color: AppColor.colorButton, shape: BoxShape.circle)),
             selectedDayPredicate: (day) {
               return DateTimeUtils.isWithinDays(fromDate, toDate, day);
             },

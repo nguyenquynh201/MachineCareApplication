@@ -28,6 +28,7 @@ class NotificationScreen extends BaseScreen<NotificationController> {
         controller: _.refreshController,
         onLoadMore: _.getNotification,
         onRefresh: _.onRefresh,
+        isNotEmpty: _.notifications.isNotEmpty,
         child: _.loading.value
             ? const WidgetLoading()
             : SingleChildScrollView(

@@ -13,6 +13,7 @@ class WidgetItemProfile extends StatelessWidget {
   final String icon;
   @override
   Widget build(BuildContext context) {
+    print("nè nè ${user?.avatar}");
     return GestureDetector(
       onTap: onPress,
       child: Container(
@@ -24,7 +25,7 @@ class WidgetItemProfile extends StatelessWidget {
           children: [
              WidgetAvatar(
               radius: 24,
-              url: user!.avatar,
+              url: user?.avatar,
             ),
             const SizedBox(
               width: 11,

@@ -29,7 +29,7 @@ class WidgetItemSelect extends StatelessWidget {
           vertical: 8,
         ),
         decoration: BoxDecoration(
-            color: color, borderRadius: BorderRadius.circular(8)),
+             borderRadius: BorderRadius.circular(8)),
         alignment: Alignment.center,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +39,7 @@ class WidgetItemSelect extends StatelessWidget {
                 state,
                 style: AppTextStyles.customTextStyle().copyWith(
                   fontSize: 15,
-                  color: AppColor.colorButton,
+                  color: color ?? AppColor.colorButton,
                   fontFamily: Fonts.Quicksand.name
                 ),
               ),

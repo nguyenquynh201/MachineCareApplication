@@ -72,6 +72,7 @@ class WidgetImageNetwork extends StatelessWidget {
             placeHolderType: placeHolderType),
       );
     }
+
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.circular(radius ?? 0),
       child: avatar,
@@ -113,7 +114,13 @@ class EmptyImage extends StatelessWidget {
       case PlaceHolderType.typeNothing:
         child = const SizedBox();
         break;
-
+      case PlaceHolderType.coverBackground:
+        child = Container(
+          color: AppColor.colorPlaceHolderRecording,
+          height: height,
+          width: width,
+        );
+        break;
       default:
         child = WidgetImageAsset(
           url: AppImages.icNoImage,

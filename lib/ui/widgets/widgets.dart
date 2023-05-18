@@ -30,4 +30,6 @@ export 'widget_textfield.dart';
 export 'dialog/dialog.dart';
 export 'widget_empty_data.dart';
 export 'widget_person.dart';
+export 'widget_thumbnail.dart';
+export 'widget_input_comment.dart';
 

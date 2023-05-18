@@ -6,12 +6,12 @@ class MaintenanceScheduleEntity {
   String? sId;
   String? maintenanceContent;
   ProductEntity? products;
-  List<ErrorMachineEntity>? errorMachine;
+  List<ErrorMachineEntity> errorMachine;
   TargetMachine? target;
   StatusEnum? status;
-  List<BugEntity>? bugs;
-  List<UserEntity>? relateStaffs;
-  List<RatingEntity>? rating;
+  List<BugEntity> bugs;
+  List<UserEntity> relateStaffs;
+  List<RatingEntity> rating;
   UserAddress? address;
   DateTime? startDate;
   DateTime? dueDate;
@@ -21,16 +21,17 @@ class MaintenanceScheduleEntity {
   num? totalMoney;
   DateTime? updatedAt;
   String? note;
+  List<CommentEntity> comments;
 
   MaintenanceScheduleEntity(
       {this.sId,
       this.maintenanceContent,
       this.products,
-      this.errorMachine,
+      this.errorMachine = const [],
       this.target,
       this.status,
-      this.bugs,
-      this.relateStaffs,
+      this.bugs = const [],
+      this.relateStaffs = const [],
       this.startDate,
       this.dueDate,
       this.createdBy,
@@ -39,51 +40,40 @@ class MaintenanceScheduleEntity {
       this.updatedAt,
       this.note,
       this.address,
-      this.rating});
+      this.totalMoney,
+      this.comments = const [],
+      this.rating = const []});
 
   static List<MaintenanceScheduleEntity> listFromJson(dynamic listJson) => listJson != null
       ? List<MaintenanceScheduleEntity>.from(
           listJson.map((x) => MaintenanceScheduleEntity.fromJson(x)))
       : [];
 
-  MaintenanceScheduleEntity.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    maintenanceContent = json['maintenanceContent'] ?? EndPoint.EMPTY_STRING;
-    products = json['products'] != null ? ProductEntity.fromJson(json['products']) : null;
-    if (json['errorMachine'] != []) {
-      errorMachine = <ErrorMachineEntity>[];
-      json['errorMachine']?.forEach((v) {
-        errorMachine?.add(ErrorMachineEntity.fromJson(v));
-      });
-    }
-    target = TargetMachineExtension.valueOf(json['target']);
-    status = StatusExtenstion.valueOf(json['status']);
-    if (json['bugs'] != null) {
-      bugs = <BugEntity>[];
-      json['bugs'].forEach((v) {
-        bugs!.add(BugEntity.fromJson(v));
-      });
-    }
-    if (json['relateStaffs'] != null) {
-      relateStaffs = <UserEntity>[];
-      json['relateStaffs'].forEach((v) {
-        relateStaffs?.add(UserEntity.fromJson(v));
-      });
-    }
-    if (json['address'] != null) {
-      address = UserAddress.fromJson(json['address']);
-    }
-    if (json['rating'] != null) {
-      rating = List.from(json['rating'] ?? []).map((e) => RatingEntity.fromJson(e)).toList();
-    }
-    startDate = parseDateTime(json['startDate']);
-    createdBy = json['createdBy'] != null ? CreateByEntity.fromJson(json['createdBy']) : null;
-    dueDate = parseDateTime(json['dueDate']);
-    totalBugMoney = json['totalBugMoney'] ?? 0;
-    totalMoney = json['totalMoney'] ?? 0;
-    note = json['note'];
-    createdAt = parseDateTime(json['createdAt']);
-    updatedAt = parseDateTime(json['updatedAt']);
+  factory MaintenanceScheduleEntity.fromJson(Map<String, dynamic> json) {
+    return MaintenanceScheduleEntity(
+      sId: json['_id'],
+      maintenanceContent: json['maintenanceContent'] ?? EndPoint.EMPTY_STRING,
+      products: json['products'] != null ? ProductEntity.fromJson(json['products']) : null,
+      errorMachine: List.from(json['errorMachine'] ?? [])
+          .map((e) => ErrorMachineEntity.fromJson(e))
+          .toList(),
+      target: TargetMachineExtension.valueOf(json['target']),
+      status: StatusExtenstion.valueOf(json['status']),
+      bugs: List.from(json['bugs'] ?? []).map((e) => BugEntity.fromJson(e)).toList(),
+      relateStaffs: List.from(json['relateStaffs'] ?? [])
+          .map((e) => UserEntity.fromJson(e))
+          .toList(),
+      address: json['address'] != null ? UserAddress.fromJson(json['address']) : null,
+      rating: List.from(json['rating'] ?? []).map((e) => RatingEntity.fromJson(e)).toList(),
+      startDate: parseDateTime(json['startDate']),
+      createdBy: json['createdBy'] != null ? CreateByEntity.fromJson(json['createdBy']) : null,
+      dueDate: parseDateTime(json['dueDate']),
+      totalBugMoney: json['totalBugMoney'] ?? 0,
+      totalMoney: json['totalMoney'] ?? 0,
+      note: json['note'],
+      createdAt: parseDateTime(json['createdAt']),
+      updatedAt: parseDateTime(json['updatedAt']),
+    );
   }
 
   static DateTime? parseDateTime(String? dateTimeString) {
@@ -96,21 +86,22 @@ class MaintenanceScheduleEntity {
       "note": note,
       "products": products?.sId,
       "address": address?.id,
-      "errorMachine": errorMachine?.map((e) => e.sId.toString()).toList(),
+      "errorMachine": errorMachine.map((e) => e.sId.toString()).toList(),
       "target": targetValueOf(target),
       "status": StatusExtenstion.statusValueOf(status),
-      "bugs": bugs != null ? bugs?.map((v) => v.toJson()).toList() : [],
+      "bugs": bugs.isNotEmpty ? bugs.map((v) => v.toJson()).toList() : [],
       "startDate": startDate.toString(),
       "dueDate": startDate.toString(),
     };
   }
+
   Map<String, dynamic> toJsonUpdate() {
     return {
       "maintenanceContent": maintenanceContent,
       "note": note,
       "address": address?.id,
-      "errorMachine": errorMachine?.map((e) => e.sId.toString()).toList(),
-      "bugs": (bugs != null || bugs != []) ? bugs?.map((v) => v.toJson()).toList() : [],
+      "errorMachine": errorMachine.map((e) => e.sId.toString()).toList(),
+      "bugs": bugs.isNotEmpty ? bugs.map((v) => v.toJson()).toList() : [],
       "startDate": startDate.toString(),
       "dueDate": startDate.toString(),
     };
