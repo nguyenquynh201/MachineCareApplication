@@ -15,7 +15,6 @@ import 'services/service.dart';
 import 'ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'utils/utils.dart';
 import 'package:lifecycle/lifecycle.dart';
 
@@ -45,12 +44,6 @@ class MyApp extends StatefulWidget {
       await AppPref.initListener();
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-      await OneSignal.shared.setAppId(AppValues.oneSignalID);
-      if (!Platform.isIOS) {
-        OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) async {
-          AppLogger.getLogger().shout("Accepted permission: $accepted");
-        });
-      }
       runApp(const AppLifecycleWatcher(
         child: AppConfig(
           childWidget: MyApp(),

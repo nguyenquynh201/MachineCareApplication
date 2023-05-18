@@ -8,9 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <application
-        android:label="machine_care"
+        android:label="Machine Care"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/icon_app">
         <activity
             android:name=".MainActivity"
             android:exported="true"

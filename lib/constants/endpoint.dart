@@ -7,7 +7,7 @@ class EndPoint {
   static const int errorValidate = 422;
   static const int errorServer = 500;
   static const int errorDisconnect = -1;
-  static const String baseUrl = 'http://192.168.1.125:3000';
+  static const String baseUrl = 'http://192.168.1.8:3000';
   static const int TWO = 2;
   static const int DAYS_OF_MONTH = 30;
   static const int TWO_MONTH = TWO * DAYS_OF_MONTH;

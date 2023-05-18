@@ -16,11 +16,7 @@ class NavigationController extends BaseController {
     setLoading(true);
   }
   Future _initialLaunchApp() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    if (token != null) {
-      print("nè nè è $token");
 
-    }
     appRepository.isUserLoggedIn().then((isLoggedIn) async {
       if (isLoggedIn) {
         Get.toNamed(Routes.mainNavigation);
