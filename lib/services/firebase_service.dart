@@ -40,7 +40,7 @@ class FireBaseServices {
 
   late InitializationSettings initializationSettings;
   AndroidInitializationSettings initializationSettingsAndroid =
-  const AndroidInitializationSettings('@mipmap/ic_launcher');
+  const AndroidInitializationSettings('@mipmap/icon_app');
   IOSInitializationSettings initializationSettingsIOS =
   const IOSInitializationSettings(
     requestSoundPermission: false,

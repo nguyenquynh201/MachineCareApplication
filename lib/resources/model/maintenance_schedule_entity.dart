@@ -81,9 +81,10 @@ class MaintenanceScheduleEntity {
   }
 
   Map<String, dynamic> toJson() {
+    // code đẩy lên server đây a
     return {
-      "maintenanceContent": maintenanceContent,
-      "note": note,
+      "maintenanceContent": maintenanceContent ?? EndPoint.EMPTY_STRING,
+      "note": note ?? EndPoint.EMPTY_STRING,
       "products": products?.sId,
       "address": address?.id,
       "errorMachine": errorMachine.map((e) => e.sId.toString()).toList(),

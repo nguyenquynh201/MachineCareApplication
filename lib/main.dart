@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
 
   /// Init local plugin
   void _initLocalPlugin() {
-    var androidSettings = AndroidInitializationSettings('mipmap/ic_launcher');
+    var androidSettings = AndroidInitializationSettings('mipmap/icon_app');
     var iOSSettings = IOSInitializationSettings();
     var initSettings =
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
@@ -127,7 +127,7 @@ class _MyAppState extends State<MyApp> {
 
   /// Tap event notification
   void _tapEvenNotification({Function(String? payload)? callback}) {
-    var androidSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var androidSettings = const AndroidInitializationSettings('@mipmap/icon_app');
     var iOSSettings = IOSInitializationSettings(
         onDidReceiveLocalNotification:
             (int id, String? title, String? body, String? payload) =>

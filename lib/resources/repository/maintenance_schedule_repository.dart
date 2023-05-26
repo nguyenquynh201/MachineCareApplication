@@ -131,8 +131,15 @@ class MaintenanceScheduleRepository {
     if (isDisconnect) return NetworkState.withDisconnect();
     try {
       AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      final Options options = Options(
+        headers: {
+          "Authorization": "Bearer ${AppPref.token.accessToken}",
+          'content-Type': 'application/json'
+        },
+      );
       String api = endPoint.maintenanceSchedule;
-      Response response = await appClients.post(api, data: entity.toJson());
+      print("nè nè ${entity.toJson()}");
+      Response response = await appClients.post(api, data: entity.toJson() , options: options);
       AppUtils.logMessage("response${response.data}");
       return NetworkState(
           status: EndPoint.success, response: MaintenanceScheduleEntity.fromJson(response.data));
