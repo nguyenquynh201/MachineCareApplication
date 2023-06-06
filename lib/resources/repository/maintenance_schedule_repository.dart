@@ -72,7 +72,7 @@ class MaintenanceScheduleRepository {
       AppUtils.logMessage("response${response.data}");
       return NetworkState(
         status: EndPoint.success,
-        response: MaintenanceScheduleEntity.fromJson(response.data),
+        response: MaintenanceScheduleEntity.fromJson(response.git data),
       );
     } on DioError catch (e) {
       return NetworkState.withError(e);

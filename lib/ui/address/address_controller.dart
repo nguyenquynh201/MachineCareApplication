@@ -27,10 +27,10 @@ class AddressController extends BaseController {
       if (total == 0) {
         address.clear();
       }
+      (state.data as List<UserAddress>).sort((a , b) => (b.fixed ?? false) ? 1 : -1);
       address.addAll(state.data);
       refreshController.loadComplete();
       total = state.total ?? 0;
-      print("nè nè $total");
     } else {
       refreshController.loadFailed();
     }

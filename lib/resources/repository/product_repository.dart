@@ -37,4 +37,27 @@ class ProductRepository {
       return NetworkState.withError(e);
     }
   }
+  Future<NetworkState<ProductUserEntity>> getProductById(
+      {required String id}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      String url = "${endPoint.productMe}/$id";
+      final Options options = Options(
+        headers: {
+          "Authorization": "Bearer ${AppPref.token.accessToken}",
+          'content-Type': 'application/json'
+        },
+      );
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      Response response = await appClients.get(url, options: options);
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(
+        status: EndPoint.success,
+        response: ProductUserEntity.fromJson(response.data),
+      );
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
 }

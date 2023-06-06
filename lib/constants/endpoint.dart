@@ -16,6 +16,4 @@ class EndPoint {
   static const int LIMIT = 10;
   static const int MINIMUM_PHONE_LENGTH = 10;
   static const int MINIMUM_PASSWORD_LENGTH = 6;
-
-
 }

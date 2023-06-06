@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:machine_care/constants/constants.dart';
-import 'package:machine_care/enum/validate.dart';
-
 import '../ui.dart';
 
 class WidgetHeader extends StatelessWidget {
@@ -48,51 +46,31 @@ class WidgetHeader extends StatelessWidget {
       decoration: isBackground
           ? BoxDecoration(gradient: gradient)
           : BoxDecoration(color: color ?? AppColor.white),
-      child: Stack(
-        // fit: StackFit.expand,
-        // clipBehavior: Clip.none,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              leading ??
-                  WidgetButtonBack(
-                    color: colorIcon,
-                  ),
-              Expanded(
-                child: Align(
-                  alignment: centerTitle ? Alignment.center : Alignment.centerLeft,
-                  child: widgetTitle ??
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildTitle(titleColor),
-                          Visibility(
-                            visible: address != null,
-                            child: _buildAddress(titleColor),
-                          )
-                        ],
-                      ),
-                ),
+          leading ??
+              WidgetButtonBack(
+                color: colorIcon,
               ),
-              ...(actions ?? [])
-            ],
+          Expanded(
+            child: Align(
+              alignment: centerTitle ? Alignment.center : Alignment.centerLeft,
+              child: widgetTitle ??
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildTitle(titleColor),
+                      Visibility(
+                        visible: address != null,
+                        child: _buildAddress(titleColor),
+                      )
+                    ],
+                  ),
+            ),
           ),
-          // Visibility(
-          //     visible: isBackground,
-          //     child: const Positioned(
-          //         right: -80,
-          //         top: -140,
-          //         child: Opacity(
-          //           opacity: 0.5,
-          //           child: WidgetImageAsset(
-          //             url: AppImages.icCoffeBg,
-          //             fit: BoxFit.contain,
-          //             height: 195,
-          //             width: 195,
-          //           ),
-          //         )))
+          ...(actions ?? [])
         ],
       ),
     );

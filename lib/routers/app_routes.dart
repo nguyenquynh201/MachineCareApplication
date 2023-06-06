@@ -12,5 +12,6 @@ abstract class Routes {
   static const repairEdit = "/repair_edit";
   static const repairHistory = "/repair_history";
   static const notificationDetail = "/notification_detail";
+  static const productDetail = "/product_detail";
 
 }

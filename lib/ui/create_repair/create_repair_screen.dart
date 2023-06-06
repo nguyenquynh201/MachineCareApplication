@@ -21,17 +21,7 @@ class CreateRepairScreen extends BaseScreen<CreateRepairController> {
             WidgetHeader(
               title: 'create_repair'.tr,
               isBackground: true,
-              // actions: [
-              //   GestureDetector(
-              //     onTap: () {},
-              //     child: const WidgetSvg(
-              //       path: AppImages.iconEdit,
-              //       fit: BoxFit.contain,
-              //       height: 24,
-              //       width: 24,
-              //     ),
-              //   )
-              // ],
+
             ),
             Obx(() => Container(
                   width: Get.width,

@@ -52,6 +52,7 @@ class AppImages {
   static const String iconCalling = '${pathSvg}ic-calling.svg';
   static const String iconSetting = '${pathSvg}ic-more-setting.svg';
   static const String iconSend = '${pathSvg}ic_send.svg';
+  static const String icoCheckBlue = '${pathSvg}ic_check_blue.svg';
   static const String iconMale = '${pathSvg}ic_male.svg'; /// nam
   static const String iconFemale = '${pathSvg}ic_female.svg'; /// nữ
 

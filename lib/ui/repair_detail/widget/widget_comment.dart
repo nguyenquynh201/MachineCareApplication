@@ -38,6 +38,7 @@ class _WidgetCommentViewState extends State<WidgetComment> {
 
   @override
   Widget build(BuildContext context) {
+    print("url á ${widget.comment.userId?.avatar}");
     DateTime dateUTC = widget.comment.createdAt!;
     DateTime dateNow = dateUTC.toLocal();
     String convertedDateTime = StringUtils.getDifferenceTimeString(dateStr: dateNow.toString());
@@ -46,8 +47,8 @@ class _WidgetCommentViewState extends State<WidgetComment> {
       children: [
         if (widget.comment.userId == null)
           _buildThumbnailDefault()
-        else if (widget.comment.userId!.avatar != null)
-          WidgetThumbnail(url: widget.comment.userId!.avatar!)
+        else if (widget.comment.userId?.avatar != null)
+          WidgetThumbnail(url: widget.comment.userId?.avatar)
         else
           _buildThumbnailDefault(),
         Expanded(
@@ -67,11 +68,20 @@ class _WidgetCommentViewState extends State<WidgetComment> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.comment.userId != null)
-                      _buildTitle(
-                          title: '${(widget.comment.userId!.fullName)}')
-                    else
-                      _buildTitle(title: '${(widget.comment.userName)}'),
+                   Row(
+                     children: [
+                       if (widget.comment.userId != null)
+                         _buildTitle(
+                             title: '${(widget.comment.userId!.fullName)}')
+                       else
+                         _buildTitle(title: '${(widget.comment.userName)}'),
+                       const SizedBox(
+                         width: 4,
+                       ),
+                       if(widget.comment.userId != null && widget.comment.userId?.role == 'admin')
+                         const WidgetSvg(path: AppImages.icoCheckBlue , color: AppColor.colorSupport,),
+                     ],
+                   ),
                     const SizedBox(
                       height: 4,
                     ),
@@ -316,14 +326,15 @@ class _WidgetCommentViewState extends State<WidgetComment> {
 
 
   Widget _buildThumbnailDefault() {
-    return Container(
+    return SizedBox(
       height: 40,
       width: 40,
       child: ClipRRect(
           borderRadius:
           BorderRadius.circular(24),
-          child: Image.asset(
-            AppImages.icNoAvatar,
+          child: const WidgetSvg(
+            isColor: true,
+            path: AppImages.icNoAvatar,
             height: 40,
             width: 40,
             fit: BoxFit.contain,

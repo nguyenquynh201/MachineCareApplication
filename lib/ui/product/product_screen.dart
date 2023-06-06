@@ -4,6 +4,7 @@ import 'package:machine_care/ui/ui.dart';
 
 class ProductScreen extends BaseScreen<ProductController> {
   ProductScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +38,7 @@ class ProductScreen extends BaseScreen<ProductController> {
 class WidgetListProduct extends StatelessWidget {
   const WidgetListProduct({Key? key, required this.controller}) : super(key: key);
   final ProductController controller;
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -45,7 +47,7 @@ class WidgetListProduct extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 17),
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 0.89, crossAxisSpacing: 10, mainAxisSpacing: 10),
+            crossAxisCount: 2, childAspectRatio: 0.96),
         itemBuilder: (_, index) {
           return itemBuilder(controller.products, index);
         });

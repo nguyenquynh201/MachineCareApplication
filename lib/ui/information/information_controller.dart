@@ -12,6 +12,7 @@ class InformationController extends BaseController {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   Rx<TextEditingController> birthDayController = TextEditingController().obs;
+  TextEditingController emailController = TextEditingController();
   Rx<TextEditingController> provinceController = TextEditingController().obs;
   Rx<TextEditingController> districtController = TextEditingController().obs;
   TextEditingController addressController = TextEditingController();
@@ -27,6 +28,7 @@ class InformationController extends BaseController {
 
   RxString name = "".obs;
   RxString address = "".obs;
+  RxString email = "".obs;
   DateTime _birthday = DateTime.now();
 
   DateTime get birthday => _birthday;
@@ -42,15 +44,14 @@ class InformationController extends BaseController {
     }
     _register();
     setLoading(false);
-
   }
-
   _register() {
     nameController.text = name.value = entity.value.fullName ?? EndPoint.EMPTY_STRING;
-    phoneController.text = entity.value.phone ?? EndPoint.EMPTY_STRING;
+    phoneController.text  = entity.value.phone ?? EndPoint.EMPTY_STRING;
     provinceController.value.text = entity.value.addressProvince ?? EndPoint.EMPTY_STRING;
     districtController.value.text = entity.value.addressDistrict ?? EndPoint.EMPTY_STRING;
     addressController.text = address.value = entity.value.address ?? EndPoint.EMPTY_STRING;
+    emailController.text = email.value = entity.value.email ?? EndPoint.EMPTY_STRING;
     _birthday = (!StringUtils.isEmpty(entity.value.birthday)
         ? DateTime.tryParse(entity.value.birthday!)
         : DateTime.now()) ?? DateTime.now();
@@ -79,6 +80,10 @@ class InformationController extends BaseController {
 
   void onChangedName(String value) {
     name.value = value;
+    AppUtils.logMessage(value);
+  }
+  void onChangedEmail(String value) {
+    email.value = value;
     AppUtils.logMessage(value);
   }
 
@@ -147,6 +152,7 @@ class InformationController extends BaseController {
         addressDistrict: districtController.value.text,
         address: address.value,
         birthday: _birthday.toUtc().toString(),
+        email: email.value
       );
       NetworkState state = await appRepository.updateInfo(
           id: this.entity.value.sId ?? AppPref.user.sId ?? "", entity: entity);
@@ -170,6 +176,7 @@ class InformationController extends BaseController {
     if (name.value != AppPref.user.fullName ||
         gender.value != AppPref.user.gender ||
         address.value != AppPref.user.address ||
+        email.value != AppPref.user.email ||
         provinceController.value.text != AppPref.user.addressProvince ||
         districtController.value.text != AppPref.user.addressDistrict ||
         avatar.value.toString() != File('').toString() ||

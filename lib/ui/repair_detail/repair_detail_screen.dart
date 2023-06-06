@@ -60,7 +60,7 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
               children: [
                 _buildTitle(title: 'information'.tr),
                 _buildRepairInfo(entity: controller.entity.value),
-                Visibility(visible: controller.bugEntity.isNotEmpty,child: _buildBug()),
+                Visibility(visible: controller.bugEntity.isNotEmpty, child: _buildBug()),
                 _buildAddress(controller.entity.value.address),
                 _buildProduct(entity: controller.entity.value.products),
                 _buildError(entities: controller.entity.value.errorMachine),
@@ -74,15 +74,14 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
           ),
         ));
   }
+
   Widget _buildBug() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTitle(title: 'bug_other'.tr),
-        _buildItemBug()
-      ],
+      children: [_buildTitle(title: 'bug_other'.tr), _buildItemBug()],
     );
   }
+
   Widget _buildItemBug() {
     return Obx(
       () => Container(
@@ -98,7 +97,7 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
                 final entity = controller.bugEntity.elementAt(index);
                 return Container(
                   padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.only(left: 10 , right: 10 , top: 10 , bottom: 10),
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
                   width: Get.width,
                   decoration: BoxDecoration(
                       color: AppColor.colorBanner, borderRadius: BorderRadius.circular(10)),
@@ -114,7 +113,9 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 4,),
+                      const SizedBox(
+                        height: 4,
+                      ),
                       Text(
                         "${'price_bug'.tr}: ${CurrencyFormatter.encoded(price: entity.priceBug.toString())} VND",
                         style: AppTextStyles.customTextStyle().copyWith(
@@ -129,7 +130,9 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
                 );
               }),
               Visibility(
-                visible: controller.entity.value.status != StatusEnum.Done,
+                visible: (controller.entity.value.status != StatusEnum.Done &&
+                    AppPref.user.role != null &&
+                    AppPref.user.role == 'staff'),
                 child: _buildAddButton(() {
                   Get.bottomSheet(BottomSheetBug(
                     updateBug: (entity) {
@@ -156,7 +159,7 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
       child: GestureDetector(
         onTap: onPressed,
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
             vertical: 10,

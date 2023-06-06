@@ -6,7 +6,7 @@ class ProductEntity {
   String? serialNumber;
   String? manufacturer;
   String? specifications;
-  String? yearOfManufacturer;
+  DateTime? yearOfManufacturer;
   bool? show;
   List<FileEntity>? imageMachine;
   String? createdAt;
@@ -30,7 +30,7 @@ class ProductEntity {
     serialNumber = json['serialNumber'] ?? "";
     manufacturer = json['manufacturer'] ?? "";
     specifications = json['specifications'] ?? "";
-    yearOfManufacturer = json['yearOfManufacturer'] ?? "";
+    yearOfManufacturer = parseDateTime(json['yearOfManufacturer']);
     show = json['show'] ?? false;
     if (json['imageMachine'] != null) {
       imageMachine = <FileEntity>[];
@@ -42,6 +42,10 @@ class ProductEntity {
     updatedAt = json['updatedAt'] ?? "";
   }
 
+  static DateTime? parseDateTime(String? dateTimeString) {
+    return (dateTimeString != null) ? DateTime.parse(dateTimeString) : null;
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     data['_id'] = sId;
@@ -49,10 +53,10 @@ class ProductEntity {
     data['serialNumber'] = serialNumber;
     data['manufacturer'] = manufacturer;
     data['specifications'] = specifications;
-    data['yearOfManufacturer'] = yearOfManufacturer;
+    data['yearOfManufacturer'] = yearOfManufacturer.toString();
     data['show'] = show;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
+    data['createdAt'] = createdAt.toString();
+    data['updatedAt'] = updatedAt.toString();
     return data;
   }
 }

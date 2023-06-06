@@ -9,25 +9,25 @@ class ProfileScreen extends BaseScreen<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.white,
-      body: RefreshIndicator(
-        onRefresh: () async {},
-        child: SingleChildScrollView(
+    return WidgetListenableProfile(builder: (_ , userModel , __) {
+      UserEntity? user = userModel;
+      return Scaffold(
+        backgroundColor: AppColor.white,
+        body: SingleChildScrollView(
           child: Column(
             children: [
               WidgetHeader(
                 title: 'account'.tr,
                 leading: Container(),
               ),
-              WidgetItemProfile(title: '', icon: '', user: AppPref.user, onPress: () {
+              WidgetItemProfile(title: '', icon: '', user: user ?? AppPref.user, onPress: () {
                 Get.toNamed(Routes.information);
               }),
               const SizedBox(
                 height: 43,
               ),
               Visibility(
-                visible: (AppPref.user.role != null && AppPref.user.role == 'user'),
+                visible: (user?.role != null && user?.role == 'user'),
                 child: WidgetItemProfile(
                     title: 'address_book'.tr,
                     icon: AppImages.icAddress,
@@ -80,7 +80,7 @@ class ProfileScreen extends BaseScreen<ProfileController> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

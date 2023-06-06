@@ -26,7 +26,9 @@ class AddressScreen extends BaseScreen<AddressController> {
               color: AppColor.colorSupport,
               onPress: () async {
                 final _ = await Get.toNamed(Routes.createEditAddress);
-                if (_ != null && _) {}
+                if (_ != null && _) {
+                  controller.onRefresh();
+                }
               }),
           Expanded(
             child: GetX<AddressController>(
@@ -62,21 +64,23 @@ class WidgetLocation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: addressList.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (_, index) {
-          UserAddress entity = addressList.elementAt(index);
-          return WidgetAddress(
-            entity: entity,
-            onPressed: () async {
-              final _ = await Get.toNamed(Routes.createEditAddress, arguments: entity);
-              if ( _ != null && _) {
-                controller.onRefresh();
-              }
-            },
-          );
-        });
+    return GetX<AddressController>(builder: (_) {
+      return ListView.builder(
+          itemCount: addressList.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (_, index) {
+            UserAddress entity = addressList.elementAt(index);
+            return WidgetAddress(
+              entity: entity,
+              onPressed: () async {
+                final _ = await Get.toNamed(Routes.createEditAddress, arguments: entity);
+                if ( _ != null && _) {
+                  controller.onRefresh();
+                }
+              },
+            );
+          });
+    });
   }
 }

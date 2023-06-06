@@ -54,14 +54,21 @@ class AppPages extends Routes {
       name: Routes.repairEdit,
       binding: EditRepairBinding(),
       page: () => EditRepairScreen(),
-    ), GetPage(
+    ),
+    GetPage(
       name: Routes.repairHistory,
       binding: HistoryRepairBinding(),
       page: () => HistoryRepairScreen(),
-    ), GetPage(
+    ),
+    GetPage(
       name: Routes.notificationDetail,
       binding: NotificationDetailBinding(),
       page: () => NotificationDetailScreen(),
+    ),
+    GetPage(
+      name: Routes.productDetail,
+      binding: ProductDetailBinding(),
+      page: () => ProductDetailScreen(),
     ),
   ];
 }

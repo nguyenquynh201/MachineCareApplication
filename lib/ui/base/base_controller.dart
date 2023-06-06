@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:machine_care/resources/model/model.dart';
@@ -13,7 +14,7 @@ class BaseController extends GetxController {
     setLoading(false);
   }
   static GlobalKey navigationKey = GlobalKey();
-
+  FirebaseMessaging get instance =>  FirebaseMessaging.instance;
   @override
   void onClose() {
     super.onClose();

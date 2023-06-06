@@ -24,26 +24,26 @@ class UserEntity {
   List<ProductUserEntity>? listProduct;
   List<UserAddress>? listAddress;
 
-  UserEntity(
-      {this.sId,
-      this.role,
-      this.email,
-      this.fullName,
-      this.phone,
-      this.username,
-      this.createdAt,
-      this.updatedAt,
-      this.lastLogin,
-      this.gender,
-      this.deviceTokens,
-      this.resetPassword,
-      this.listAddress,
-      this.addressProvince,
-      this.addressDistrict,
-      this.address,
-      this.avatar,
-        this.birthday = EndPoint.EMPTY_STRING,
-      });
+  UserEntity({
+    this.sId,
+    this.role,
+    this.email,
+    this.fullName,
+    this.phone,
+    this.username,
+    this.createdAt,
+    this.updatedAt,
+    this.lastLogin,
+    this.gender,
+    this.deviceTokens,
+    this.resetPassword,
+    this.listAddress,
+    this.addressProvince,
+    this.addressDistrict,
+    this.address,
+    this.avatar,
+    this.birthday = EndPoint.EMPTY_STRING,
+  });
 
   UserEntity.fromJson(Map<String, dynamic> json) {
     sId = json['_id'] as String;
@@ -60,14 +60,13 @@ class UserEntity {
     addressDistrict = json['addressDistrict'] ?? EndPoint.EMPTY_STRING;
     address = json['address'] ?? EndPoint.EMPTY_STRING;
     gender = json['gender'] != null ? GenderExtension.valueOf(json['gender']) : null;
-    if(json['avatar'] != null) {
-      if(json['avatar'].contains('http://') || json['avatar'].contains('https://')) {
-        avatar = "${json['avatar']}" ;
-      }else {
+    if (json['avatar'] != null) {
+      if (json['avatar'].contains('http://') || json['avatar'].contains('https://')) {
+        avatar = "${json['avatar']}";
+      } else {
         avatar = "${EndPoint.baseUrl}/${json['avatar']}";
       }
-    }else {
-    }
+    } else {}
     if (json['deviceTokens'] != null) {
       deviceTokens = <String>[];
       json['deviceTokens'].forEach((v) {
@@ -120,6 +119,7 @@ class UserEntity {
     return {
       'fullName': fullName,
       'phone': phone,
+      'email': email,
       'gender': GenderExtension.genderValueOf(gender),
       'addressProvince': addressProvince,
       'addressDistrict': addressDistrict,
@@ -135,14 +135,17 @@ class ProductUserEntity {
   ProductEntity? productId;
   String? createdAt;
   String? updatedAt;
+  String? lastMaintenanceDate;
+  String? nextMaintenanceDate;
 
-  ProductUserEntity({
-    this.sId,
-    this.userId,
-    this.productId,
-    this.createdAt,
-    this.updatedAt,
-  });
+  ProductUserEntity(
+      {this.sId,
+      this.userId,
+      this.productId,
+      this.createdAt,
+      this.updatedAt,
+      this.lastMaintenanceDate,
+      this.nextMaintenanceDate});
 
   ProductUserEntity.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -150,6 +153,8 @@ class ProductUserEntity {
     productId = json['productId'] != null ? ProductEntity.fromJson(json['productId']) : null;
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    nextMaintenanceDate = json['nextMaintenanceDate'];
+    lastMaintenanceDate = json['lastMaintenanceDate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -159,8 +164,12 @@ class ProductUserEntity {
     if (productId != null) {
       data['productId'] = productId?.toJson();
     }
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
+    data['createdAt'] = createdAt.toString();
+    data['updatedAt'] = updatedAt.toString();
     return data;
+  }
+
+  static DateTime? parseDateTime(String? dateTimeString) {
+    return (dateTimeString != null) ? DateTime.parse(dateTimeString) : null;
   }
 }

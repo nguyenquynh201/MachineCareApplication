@@ -60,8 +60,8 @@ class WidgetAvatar extends StatelessWidget {
           child: ClipOval(
             child: SvgPicture.asset(
               AppImages.icNoAvatar,
-              width: 50,
-              height: 50,
+              width: radius * 2,
+              height: radius * 2,
             ),
           ),
         ),

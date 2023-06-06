@@ -165,4 +165,19 @@ class AuthRepository {
       return NetworkState.withError(e);
     }
   }
+  Future<dynamic> deleteDeviceToken({required String token}) async {
+    bool isDisconnect = await WifiService.isDisconnect();
+    if (isDisconnect) return NetworkState.withDisconnect();
+    try {
+      AppUtils.logMessage("nè nè${AppPref.token.accessToken}");
+      String api = "${endPoint.user}/deviceToken";
+      Map<String, dynamic> tokens = {"deviceToken": token};
+      Response response = await appClients.delete(api, data: tokens);
+      AppUtils.logMessage("response${response.data}");
+      return NetworkState(status: EndPoint.success, response: response.data);
+
+    } on DioError catch (e) {
+      return NetworkState.withError(e);
+    }
+  }
 }

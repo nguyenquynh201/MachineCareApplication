@@ -61,6 +61,15 @@ class InformationScreen extends BaseScreen<InformationController> {
                               onChanged: _.onChangedName),
                         ),
                         WidgetItemAddress(
+                          title: 'email'.tr.toUpperCase(),
+                          des: 'obligatory'.tr,
+                          child: _buildInput(
+                              controller: _.emailController,
+                              typeInput: TypeInput.custom,
+                              hint: 'hint_email'.tr,
+                              onChanged: _.onChangedEmail),
+                        ),
+                        WidgetItemAddress(
                           title: 'phone'.tr.toUpperCase(),
                           des: 'obligatory'.tr,
                           child: _buildInput(

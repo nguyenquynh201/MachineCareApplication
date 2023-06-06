@@ -23,3 +23,4 @@ export 'edit_repair/edit_repair.dart';
 export 'history_repair/history_repair.dart';
 export 'notification_detail/notification_detail.dart';
 export 'repair/widget/widget.dart';
+export 'product_detail/product_detail.dart';

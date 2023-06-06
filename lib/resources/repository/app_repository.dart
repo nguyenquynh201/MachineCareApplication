@@ -132,7 +132,10 @@ class AppRepository {
   Future<NetworkState<UserEntity>> updateInfo({required String id , required UserEntity entity}) async {
     return authRepository.updateInfo(id: id, entity: entity);
   }
-  Future<NetworkState<List<CommentEntity>>> getComment({required String id}) async {
+  Future<dynamic> deleteDeviceToken({required String token}) async {
+  return authRepository.deleteDeviceToken(token: token);
+  }
+    Future<NetworkState<List<CommentEntity>>> getComment({required String id}) async {
     return maintenanceScheduleRepository.getComment(id: id);
   }
 
@@ -147,6 +150,10 @@ class AppRepository {
   Future<NetworkState<dynamic>> updateBug(
       {required List<BugEntity> entity , required String id}) async {
     return maintenanceScheduleRepository.updateBug(entity: entity , id: id);
+  }
+  Future<NetworkState<ProductUserEntity>> getProductById(
+      {required String id}) async {
+    return await productRepository.getProductById(id: id);
   }
     Future<bool> isUserLoggedIn() async {
     try {

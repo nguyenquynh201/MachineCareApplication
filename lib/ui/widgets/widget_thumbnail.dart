@@ -10,7 +10,7 @@ class WidgetThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     if (url != null) {
       return WidgetImageNetwork(
-          url: url!,
+          url: url ?? "",
           width: 40,
           height: 40,
           borderRadius: BorderRadius.circular(12),
