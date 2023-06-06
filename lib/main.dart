@@ -84,7 +84,6 @@ class _MyAppState extends State<MyApp> {
       if (message == null) {
         return;
       }
-      print('handleInitialMessage');
       _handleEventTap(message);
     });
   }
@@ -92,7 +91,6 @@ class _MyAppState extends State<MyApp> {
   /// Handle on message
   void handleOnMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print('handleOnMessage');
 
       _handleEventTap(message);
     });

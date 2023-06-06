@@ -60,7 +60,7 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
               children: [
                 _buildTitle(title: 'information'.tr),
                 _buildRepairInfo(entity: controller.entity.value),
-                Visibility(visible: controller.bugEntity.isNotEmpty, child: _buildBug()),
+                _buildBug(),
                 _buildAddress(controller.entity.value.address),
                 _buildProduct(entity: controller.entity.value.products),
                 _buildError(entities: controller.entity.value.errorMachine),
@@ -77,8 +77,34 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
 
   Widget _buildBug() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildTitle(title: 'bug_other'.tr), _buildItemBug()],
+      children: [
+        Visibility(
+          visible: controller.bugEntity.isNotEmpty,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [_buildTitle(title: 'bug_other'.tr), _buildItemBug()],
+          ),
+        ),
+        Visibility(
+          visible: (controller.entity.value.status != StatusEnum.Done &&
+              AppPref.user.role != null &&
+              AppPref.user.role == 'staff'),
+          child: _buildAddButton(() {
+            Get.bottomSheet(BottomSheetBug(
+              updateBug: (entity) {
+                controller.updateBug(entity: entity);
+              },
+            ),
+                backgroundColor: AppColor.white,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                enterBottomSheetDuration: const Duration(milliseconds: 500),
+                barrierColor: Colors.black.withOpacity(0.3));
+          }),
+        ),
+const SizedBox(height: 10,),
+      ],
     );
   }
 
@@ -129,24 +155,6 @@ class RepairDetailScreen extends BaseScreen<RepairDetailController> {
                   ),
                 );
               }),
-              Visibility(
-                visible: (controller.entity.value.status != StatusEnum.Done &&
-                    AppPref.user.role != null &&
-                    AppPref.user.role == 'staff'),
-                child: _buildAddButton(() {
-                  Get.bottomSheet(BottomSheetBug(
-                    updateBug: (entity) {
-                      controller.updateBug(entity: entity);
-                    },
-                  ),
-                      backgroundColor: AppColor.white,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-                      enterBottomSheetDuration: const Duration(milliseconds: 500),
-                      barrierColor: Colors.black.withOpacity(0.3));
-                }),
-              )
             ],
           )),
     );

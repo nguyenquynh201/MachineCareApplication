@@ -24,7 +24,7 @@ class _BottomSheetBugState extends State<BottomSheetBug> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const WidgetHeaderBottomSheet(title: 'bug_other'),
+           WidgetHeaderBottomSheet(title: 'bug_other'.tr),
           Expanded(
               child: Container(
             padding: const EdgeInsets.all(12),

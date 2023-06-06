@@ -44,8 +44,8 @@ class EditRepairController extends BaseController {
     if (entity.address != null) {
       address.value = entity.address!;
     }
-    if (entity.errorMachine != null || entity.errorMachine != []) {
-      error.value = entity.errorMachine ?? [];
+    if (entity.errorMachine.isNotEmpty) {
+      error.value = entity.errorMachine ;
     }
     noteTextController.text = entity.note ?? EndPoint.EMPTY_STRING;
     message.value = entity.note ?? EndPoint.EMPTY_STRING;
